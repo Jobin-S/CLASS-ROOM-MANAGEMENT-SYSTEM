@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Favicon -->
+    <link rel="shortcut icon" type="image/x-icon" href="/img/favicon.png">
+    <!-- Select 2 CSS -->
+    <link rel="stylesheet" href="/css/select2.min.css">
+    <!-- Date Picker CSS -->
+    <link rel="stylesheet" href="/css/datepicker.min.css">
+
+    <!-- Normalize CSS -->
+
+    <link rel="stylesheet" href="/css/normalize.css">
+    <!-- Main CSS -->
+    <link rel="stylesheet" href="/css/main.css">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <!-- Fontawesome CSS -->
+    <link rel="stylesheet" href="/css/all.min.css">
+    <!-- Flaticon CSS -->
+    <link rel="stylesheet" href="/fonts/flaticon.css">
+    <!-- Animate CSS -->
+    <link rel="stylesheet" href="/css/animate.min.css">
+    <!-- Data Table CSS -->
+    <link rel="stylesheet" href="/css/jquery.dataTables.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/style.css">
+    <!-- Modernize js -->
+    <script src="/js/modernizr-3.6.0.min.js"></script>
+    <title>{{title}}</title>
+
+</head>
+
+<body>
+    {{#if tutor}}
+    {{>tutor-sidebar}}
+    {{/if}}
+    {{{body}}}
+
+    {{#if tutor}}
+        {{>tutor-footer}}
+    {{/if}}
+
+    <!-- jquery-->
+    <script src="/js/jquery-3.3.1.min.js"></script>
+
+    <!-- Plugins js -->
+    <script src="/js/plugins.js"></script>
+    <!-- Popper js -->
+    <script src="/js/popper.min.js"></script>
+    <!-- Bootstrap js -->
+    <script src="/js/bootstrap.min.js"></script>
+    <!-- Counterup Js -->
+    <script src="/js/jquery.counterup.min.js"></script>
+    <!-- Waypoints Js -->
+    <script src="/js/jquery.waypoints.min.js"></script>
+    <!-- Scroll Up Js -->
+    <script src="/js/jquery.scrollUp.min.js"></script>
+    <!-- Data Table Js -->
+    <script src="/js/jquery.dataTables.min.js"></script>
+    <!-- Chart Js -->
+    <script src="/js/Chart.min.js"></script>
+    <!-- Custom Js -->
+    <script src="/js/main.js"></script>
+
+    <!-- Select 2 Js -->
+    <script src="/js/select2.min.js"></script>
+    <!-- Date Picker Js -->
+    <script src="/js/datepicker.min.js"></script>
+</body>
+
+</html>
