@@ -10,7 +10,7 @@
                 </div>
                 <form action="/tutor/login" method="POST" class="login-form">
                 {{#if loginError}}
-                    <p class="text-danger text-center bold">{{loginError}}</p>
+                    <div class="alert alert-danger">{{loginError}}</div>
                 {{/if}}
                     <div class="form-group">
                         <label>Username</label>
@@ -46,4 +46,3 @@
             <div class="sign-up">Don't have an account ? <a href="#">Signup now!</a></div>
         </div>
     </div>
-    <!-- Login Page End Here -->

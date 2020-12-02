@@ -1,0 +1,113 @@
+<div class="dashboard-content-one">
+    <!-- Breadcubs Area Start Here -->
+    <div class="breadcrumbs-area">
+        <h3>{{title}}</h3>
+        <ul>
+            <li>
+                <a href="index.html">Home</a>
+            </li>
+            <li>{{title}}</li>
+        </ul>
+    </div>
+    <!-- Breadcubs Area End Here -->
+    <!-- Account Settings Area Start Here -->
+    <div class="row">
+
+        <div class="col-12 ">
+            <div class="card account-settings-box">
+                <div class="card-body">
+                    <div class="heading-layout1 mg-b-20">
+                        <div class="item-title">
+                            <h3>User Details</h3>
+                        </div>
+                        <div class="dropdown">
+                            <a class="dropdown-toggle" href="#" role="button" data-toggle="dropdown"
+                                aria-expanded="false">...</a>
+
+                            <div class="dropdown-menu dropdown-menu-right">
+                                <a class="dropdown-item" href="/tutor/edit-profile"><i
+                                        class="fas fa-cogs text-dark-pastel-green"></i>Edit</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="user-details-box">
+                        <div class="item-img">
+                            <img src="/img/figure/user.jpg" alt="user">
+                        </div>
+                        <div class="item-content">
+                            <div class="info-table table-responsive form-group">
+                                <form action="/tutor/edit-profile" method="POST">
+                                    <table class="table ">
+                                        <tbody>
+                                            <tr>
+                                                <td>Name:</td>
+                                                <td><input type="text" name="name" class="bold-text form-control text-dark"
+                                                        value="{{profileDetails.name}}"></input></td>
+                                            </tr>
+
+                                            <tr>
+                                                <td>Gender:</td>
+                                                <td class="bold-text">
+                                                    <select name="gender" class="select2" name="gender">
+                                                        <option value="Male">{{profileDetails.gender}}</option>
+                                                        <option value="Male">Male</option>
+                                                        <option value="Female">Female</option>
+                                                        <option value="others">Others</option>
+                                                    </select>
+                                                </td>
+                                            </tr>
+
+
+                                            <tr>
+                                                <td>Date Of Birth:</td>
+                                                <div class="form-group">
+                                                    <td>
+                                                        <input type="text" name="dob" value="{{profileDetails.dob}}"
+                                                            placeholder="{{profileDetails.dob}}"
+                                                            class="bold-text form-control air-datepicker"
+                                                            data-position='bottom right'>
+
+                                                    </td>
+                                                </div>
+                                            </tr>
+
+
+                                            <tr>
+                                                <td>E-mail:</td>
+                                                <td class="font-medium text-dark-medium">
+                                                    <input name="email" class=" bold-text form-control"
+                                                        value="{{profileDetails.email}}">
+                                                </td>
+                                            </tr>
+
+                                            <tr>
+                                                <td>ID No:</td>
+                                                <td class="font-medium text-dark-medium">
+                                                    <input class="bold-text" type="text" class="form-control"
+                                                        value="{{profileDetails.id_no}}" disabled>
+                                                </td>
+                                            </tr>
+
+                                            <tr>
+                                                <td>Phone:</td>
+                                                <td class="font-medium text-dark-medium">
+                                                    <input name="phone" class="bold-text form-control" type="text"
+                                                        value="{{profileDetails.phone}}">
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    <div class="col-12 form-group mg-t-8">
+                                        <button type="submit"
+                                            class="btn-fill-lg btn-gradient-yellow btn-hover-bluedark">SUBMIT</button>
+                                        
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Account Settings Area End Here -->

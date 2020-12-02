@@ -1,13 +1,14 @@
 const bcrypt = require('bcrypt')
 const { response } = require('../app')
 const db = require('../config/database')
+const collection = require('../config/collection')
 const objectId = require('mongodb').ObjectID
 
 module.exports = {
     doLogin:(details)=>{
        return new Promise(async(resolve, reject) => {
            let response = {}
-           var user = await db.get().collection('tutor').findOne({email:details.username})
+           var user = await db.get().collection(collection.TUTOR_COLLECTION).findOne({email:details.username})
            
            console.log(user);
            if (user == null) {
@@ -28,6 +29,38 @@ module.exports = {
                 })
             }
        })
+        
+    },
+    getTutorProfile:(username)=>{
+        return new Promise((resolve, reject) => {
+            db.get().collection(collection.TUTOR_COLLECTION).findOne({email:username}).then((tutor)=>{
+                resolve(tutor)
+            })
+        })
+        
+    },
+    getTutorName:(username)=>{
+        return new Promise((resolve, reject) => {
+            db.get().collection(collection.TUTOR_COLLECTION).findOne({email:username}).then((tutor)=>{
+                resolve(tutor.name)
+            })
+        })
+    },
+    updateProfile:(details, username)=>{
+        return new Promise((resolve, reject) => {
+            db.get().collection(collection.TUTOR_COLLECTION)
+            .updateOne({email:username},{
+                $set:{
+                    name:details.name,
+                    gender:details.gender,
+                    dob:details.dob,
+                    email:details.email,
+                    phone:details.phone
+                }
+            }).then(()=>{
+                resolve()
+            })
+        })
         
     }
 }

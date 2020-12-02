@@ -33,15 +33,15 @@
                 <div class="row">
                     <div class="col-xl-3 col-lg-6 col-12 form-group">
                         <label>First Name *</label>
-                        <input type="text" placeholder="" class="form-control">
+                        <input type="text" name="fname" placeholder="" class="form-control">
                     </div>
                     <div class="col-xl-3 col-lg-6 col-12 form-group">
                         <label>Last Name *</label>
-                        <input type="text" placeholder="" class="form-control">
+                        <input type="text" name="lname" placeholder="" class="form-control">
                     </div>
                     <div class="col-xl-3 col-lg-6 col-12 form-group">
                         <label>Gender *</label>
-                        <select class="select2">
+                        <select class="select2" name="gender">
                             <option value="">Please Select Gender *</option>
                             <option value="1">Male</option>
                             <option value="2">Female</option>
@@ -50,15 +50,12 @@
                     </div>
                     <div class="col-xl-3 col-lg-6 col-12 form-group">
                         <label>Date Of Birth *</label>
-                        <input type="text" placeholder="dd/mm/yyyy" class="form-control air-datepicker"
+                            <input type="text" name="dob" placeholder="dd/mm/yyyy" class="form-control air-datepicker"
                             data-position='bottom right'>
                         <i class="far fa-calendar-alt"></i>
                     </div>
-                    <div class="col-xl-3 col-lg-6 col-12 form-group">
-                        <label>Roll</label>
-                        <input type="text" placeholder="" class="form-control">
-                    </div>
-                    <div class="col-xl-3 col-lg-6 col-12 form-group">
+                    
+                    {{!-- <div class="col-xl-3 col-lg-6 col-12 form-group">
                         <label>Blood Group *</label>
                         <select class="select2">
                             <option value="">Please Select Group *</option>
@@ -69,46 +66,14 @@
                             <option value="3">O+</option>
                             <option value="3">O-</option>
                         </select>
-                    </div>
-                    <div class="col-xl-3 col-lg-6 col-12 form-group">
-                        <label>Religion *</label>
-                        <select class="select2">
-                            <option value="">Please Select Religion *</option>
-                            <option value="1">Islam</option>
-                            <option value="2">Hindu</option>
-                            <option value="3">Christian</option>
-                            <option value="3">Buddish</option>
-                            <option value="3">Others</option>
-                        </select>
-                    </div>
+                    </div> --}}
+                    
                     <div class="col-xl-3 col-lg-6 col-12 form-group">
                         <label>E-Mail</label>
-                        <input type="email" placeholder="" class="form-control">
+                        <input type="email" name="email" placeholder="" class="form-control">
                     </div>
-                    <div class="col-xl-3 col-lg-6 col-12 form-group">
-                        <label>Class *</label>
-                        <select class="select2">
-                            <option value="">Please Select Class *</option>
-                            <option value="1">Play</option>
-                            <option value="2">Nursery</option>
-                            <option value="3">One</option>
-                            <option value="3">Two</option>
-                            <option value="3">Three</option>
-                            <option value="3">Four</option>
-                            <option value="3">Five</option>
-                        </select>
-                    </div>
-                    <div class="col-xl-3 col-lg-6 col-12 form-group">
-                        <label>Section *</label>
-                        <select class="select2">
-                            <option value="">Please Select Section *</option>
-                            <option value="1">Pink</option>
-                            <option value="2">Blue</option>
-                            <option value="3">Bird</option>
-                            <option value="3">Rose</option>
-                            <option value="3">Red</option>
-                        </select>
-                    </div>
+                    
+                    
                     <div class="col-xl-3 col-lg-6 col-12 form-group">
                         <label>Admission ID</label>
                         <input type="text" placeholder="" class="form-control">
