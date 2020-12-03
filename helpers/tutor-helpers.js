@@ -62,5 +62,15 @@ module.exports = {
             })
         })
         
+    },
+    getProfilePic:(username)=>{
+        return new Promise((resolve, reject) => {
+            db.get().collection(collection.TUTOR_COLLECTION)
+            .findOne({email:username})
+            .then((tutor)=>{
+                resolve(tutor.image)
+            })
+        })
+        
     }
 }

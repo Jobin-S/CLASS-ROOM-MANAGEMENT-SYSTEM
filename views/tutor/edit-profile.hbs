@@ -30,10 +30,18 @@
                             </div>
                         </div>
                     </div>
-                    <div class="user-details-box">
+                    <div class="user-details-box ">
                         <div class="item-img">
-                            <img src="/img/figure/user.jpg" alt="user">
+                            <img src="/uploads/tutor/{{profileDetails.image}}" width="250px" height="250px" alt="user">
+                            <div class="col-md-6" style="float: right;display: none;" id="drag-drop-area">
+                            </div>
+
+
                         </div>
+                        <button class="btn-fill-md btn-gradient-yellow btn-hover-bluedark text-light"
+                            onclick="toggleProfileEdit()">Change image</button>
+
+
                         <div class="item-content">
                             <div class="info-table table-responsive form-group">
                                 <form action="/tutor/edit-profile" method="POST">
@@ -41,7 +49,8 @@
                                         <tbody>
                                             <tr>
                                                 <td>Name:</td>
-                                                <td><input type="text" name="name" class="bold-text form-control text-dark"
+                                                <td><input type="text" name="name"
+                                                        class="bold-text form-control text-dark"
                                                         value="{{profileDetails.name}}"></input></td>
                                             </tr>
 
@@ -100,7 +109,7 @@
                                     <div class="col-12 form-group mg-t-8">
                                         <button type="submit"
                                             class="btn-fill-lg btn-gradient-yellow btn-hover-bluedark">SUBMIT</button>
-                                        
+
                                     </div>
                                 </form>
                             </div>
@@ -111,3 +120,38 @@
         </div>
     </div>
     <!-- Account Settings Area End Here -->
+    <script src="https://releases.transloadit.com/uppy/v1.23.2/uppy.min.js"></script>
+    <script>
+
+        var uppy = Uppy.Core()
+
+        uppy.use(Uppy.Dashboard, {
+            inline: true,
+            target: '#drag-drop-area'
+        })
+        uppy.use(Uppy.XHRUpload, {
+            endpoint: 'http://localhost:3000/tutor/editprofile-image',
+            fieldName: 'photo',
+            formData: true
+        })
+
+        uppy.use(Uppy.Webcam, { target: Uppy.Dashboard })
+
+
+
+
+        uppy.on('complete', (result) => {
+            console.log('Upload complete! We’ve uploaded these files:', result.successful)
+            location.reload()
+        })
+
+        let toggleProfileEdit = function () {
+            let div = document.getElementById('drag-drop-area')
+            if (div.style.display === "none") {
+                div.style.display = "block";
+            } else {
+                div.style.display = "none";
+            }
+        }
+
+    </script>

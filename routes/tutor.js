@@ -2,6 +2,18 @@ var express = require('express');
 const tutorHelpers = require('../helpers/tutor-helpers');
 var router = express.Router();
 var sidebarToggle = require('../controller/sidebar-toggler').toggler
+var path = require('path')
+const multer = require('multer')
+
+const storage = multer.diskStorage({
+  destination:`${__dirname}/../public/uploads/tutor/`,
+  filename:(req, file, cb)=>{
+    const fileName = `${Date.now()}${path.extname(file.originalname)}`;
+    cb(null, fileName)
+  }
+})
+
+const uploadImage = multer({storage}).single('photo')
 
 const verifyLogin = (req, res, next)=>{
   req.session.previousPath = false
@@ -18,8 +30,12 @@ const verifyLogin = (req, res, next)=>{
 /* GET users listing. */
 router.get('/Dashboard',verifyLogin,async function(req, res, next) {
   let tutorName = await tutorHelpers.getTutorName(req.session.tutor.email)
+  let image = await tutorHelpers.getProfilePic(req.session.tutor.email)
+
   res.render('tutor/dashboard',{
   title:"Tutor Dashboard", 
+  profilePic:image,
+
   tutor:true, 
   tutorName:tutorName,
   dashboard:sidebarToggle})
@@ -27,29 +43,41 @@ router.get('/Dashboard',verifyLogin,async function(req, res, next) {
 
 router.get('/all-students',verifyLogin,async (req, res)=>{
   let tutorName = await tutorHelpers.getTutorName(req.session.tutor.email)
+  let image = await tutorHelpers.getProfilePic(req.session.tutor.email)
+
   res.render('tutor/all-students', {
     title:'All Students',
     tutor:true,
     tutorName:tutorName,
+    profilePic:image,
+
     all_students:sidebarToggle  
   })
 })
 
 router.get('/admission',verifyLogin,async (req, res)=>{
   let tutorName = await tutorHelpers.getTutorName(req.session.tutor.email)
+  let image = await tutorHelpers.getProfilePic(req.session.tutor.email)
+
   res.render('tutor/admission', {
     title:'Student Admission Form',
     tutor:true,
     tutorName:tutorName,
+    profilePic:image,
+
     student_admission:sidebarToggle  
   })
 })
 
 router.get('/attendance',verifyLogin,async (req, res)=>{
   let tutorName = await tutorHelpers.getTutorName(req.session.tutor.email)
+  let image = await tutorHelpers.getProfilePic(req.session.tutor.email)
+
   res.render('tutor/attendance',{
     title:'Attendance',
     tutor:true,
+    profilePic:image,
+
     tutorName:tutorName,
     attendance:sidebarToggle
   })
@@ -57,30 +85,43 @@ router.get('/attendance',verifyLogin,async (req, res)=>{
 
 router.get('/notice',verifyLogin,async (req, res)=>{
   let tutorName = await tutorHelpers.getTutorName(req.session.tutor.email)
+  let image = await tutorHelpers.getProfilePic(req.session.tutor.email)
+  
+
   res.render('tutor/notice', {
     title:'Notice Board',
     tutor:true,
     tutorName:tutorName,
+    profilePic:image,
+
     notice:sidebarToggle
   })
 })
 
 router.get('/assignments',verifyLogin,async(req, res)=>{
   let tutorName = await tutorHelpers.getTutorName(req.session.tutor.email)
+  let image = await tutorHelpers.getProfilePic(req.session.tutor.email)
+
   res.render('tutor/assignments',{
     title:'All Asssignments',
     tutor:true,
     tutorName:tutorName,
+    profilePic:image,
+
     assignments:sidebarToggle
   })
 })
 
 router.get('/add-assignment',verifyLogin,async(req, res)=>{
   let tutorName = await tutorHelpers.getTutorName(req.session.tutor.email)
+  let image = await tutorHelpers.getProfilePic(req.session.tutor.email)
+
   res.render('tutor/add-assignment',{
     title:"Add assignment",
     tutor:true,
     tutorName:tutorName,
+    profilePic:image,
+
     add_assignments:sidebarToggle
   })
 })
@@ -93,6 +134,7 @@ router.get('/profile',verifyLogin,async(req, res)=>{
     tutor:true,
     profile:sidebarToggle,
     profileDetails:tutorProfile,
+    profilePic:tutorProfile.image,
     tutorName:tutorProfile.name
   })
 })
@@ -151,7 +193,9 @@ router.get('/edit-profile',verifyLogin,async(req, res)=>{
     tutor:true,
     title:'Edit Profile',
     profile:sidebarToggle,
-    profileDetails:tutorProfile
+    profileDetails:tutorProfile,
+    profilePic:tutorProfile.image,
+
 
   })
 })
@@ -162,6 +206,11 @@ router.post('/edit-profile',verifyLogin, async(req, res)=>{
     req.session.tutor.email = req.body.email
     res.redirect('/tutor/profile')
   })
+})
+
+router.post('/editprofile-image', uploadImage, (req, res)=>{
+  console.log('api call');
+  if(req.file) return res.redirect('/tutor/profile')
 })
 
 module.exports = router;
