@@ -29,7 +29,7 @@
                     </div>
                 </div>
             </div>
-            <form class="new-added-form">
+            <form class="new-added-form" method="POST" action="/tutor/admission">
                 <div class="row">
                     <div class="col-xl-3 col-lg-6 col-12 form-group">
                         <label>First Name *</label>
@@ -43,9 +43,9 @@
                         <label>Gender *</label>
                         <select class="select2" name="gender">
                             <option value="">Please Select Gender *</option>
-                            <option value="1">Male</option>
-                            <option value="2">Female</option>
-                            <option value="3">Others</option>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                            <option value="others">Others</option>
                         </select>
                     </div>
                     <div class="col-xl-3 col-lg-6 col-12 form-group">
@@ -76,17 +76,17 @@
                     
                     <div class="col-xl-3 col-lg-6 col-12 form-group">
                         <label>Admission ID</label>
-                        <input type="text" placeholder="" class="form-control">
+                        <input type="text" name="admissionNum" value="{{admissionNum}}" class="form-control" readonly="readonly">
                     </div>
                     <div class="col-xl-3 col-lg-6 col-12 form-group">
                         <label>Phone</label>
-                        <input type="text" placeholder="" class="form-control">
+                        <input type="text" placeholder="" name="phone" class="form-control">
                     </div>
-                    <div class="col-lg-6 col-12 form-group">
+                    {{!-- <div class="col-lg-6 col-12 form-group">
                         <label>Short BIO</label>
                         <textarea class="textarea form-control" name="message" id="form-message" cols="10"
                             rows="9"></textarea>
-                    </div>
+                    </div> --}}
                     <div class="col-lg-6 col-12 form-group mg-t-30">
                         <label class="text-dark-medium">Upload Student Photo (150px X 150px)</label>
                         <input type="file" class="form-control-file">

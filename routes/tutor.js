@@ -9,7 +9,9 @@ const storage = multer.diskStorage({
   destination:`${__dirname}/../public/uploads/tutor/`,
   filename:(req, file, cb)=>{
     const fileName = `${Date.now()}${path.extname(file.originalname)}`;
-    cb(null, fileName)
+    tutorHelpers.updateProfilePic(req.session.tutor.email, fileName).then(()=>{
+      cb(null, fileName)
+    })
   }
 })
 
@@ -44,13 +46,14 @@ router.get('/Dashboard',verifyLogin,async function(req, res, next) {
 router.get('/all-students',verifyLogin,async (req, res)=>{
   let tutorName = await tutorHelpers.getTutorName(req.session.tutor.email)
   let image = await tutorHelpers.getProfilePic(req.session.tutor.email)
+  let students = await tutorHelpers.getAllStudents()
 
   res.render('tutor/all-students', {
     title:'All Students',
     tutor:true,
     tutorName:tutorName,
     profilePic:image,
-
+    students:students,
     all_students:sidebarToggle  
   })
 })
@@ -58,13 +61,14 @@ router.get('/all-students',verifyLogin,async (req, res)=>{
 router.get('/admission',verifyLogin,async (req, res)=>{
   let tutorName = await tutorHelpers.getTutorName(req.session.tutor.email)
   let image = await tutorHelpers.getProfilePic(req.session.tutor.email)
+  let newAdmissionNum = await tutorHelpers.getNewAdmissionNo()
 
   res.render('tutor/admission', {
     title:'Student Admission Form',
     tutor:true,
     tutorName:tutorName,
     profilePic:image,
-
+    admissionNum:newAdmissionNum,
     student_admission:sidebarToggle  
   })
 })
@@ -210,7 +214,16 @@ router.post('/edit-profile',verifyLogin, async(req, res)=>{
 
 router.post('/editprofile-image', uploadImage, (req, res)=>{
   console.log('api call');
-  if(req.file) return res.redirect('/tutor/profile')
+
+  res.redirect('/tutor/profile')
+})
+
+router.post('/admission', (req, res)=>{
+  tutorHelpers.studentRegister(req.body).then(()=>{
+    tutorHelpers.increaseAdmissionNum().then(()=>{
+      res.redirect('/tutor/all-students')
+    })
+  })
 })
 
 module.exports = router;

@@ -1437,7 +1437,7 @@ a:focus {
 }
 img {
   max-width: 100%;
-  height: auto;
+  /* height: auto; */
 }
 ul {
   list-style: outside none none;

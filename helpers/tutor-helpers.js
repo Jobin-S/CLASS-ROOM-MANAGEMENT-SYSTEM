@@ -68,7 +68,58 @@ module.exports = {
             db.get().collection(collection.TUTOR_COLLECTION)
             .findOne({email:username})
             .then((tutor)=>{
-                resolve(tutor.image)
+                let image = !tutor.image ? 'defaultProfilePic.jpg' : tutor.image
+                resolve(image)
+            })
+        })
+    },
+    updateProfilePic:(username, image)=>{
+        return new Promise((resolve, reject) => {
+            db.get().collection(collection.TUTOR_COLLECTION)
+            .updateOne({email:username},{
+                $set:{
+                    image:image
+                }
+            }).then(()=>{
+                console.log('profile picture updated');
+                resolve()
+            })
+        })
+        
+    },
+    getNewAdmissionNo:()=>{
+        return new Promise((resolve, reject) => {
+            db.get().collection(collection.CLASS_INFO_COLLECTION)
+            .findOne().then((info)=>{
+                resolve(info.lastAdmissionNum+1)
+            })
+        })
+        
+    },
+    studentRegister:(details)=>{
+        return new Promise((resolve, reject) => {
+            db.get().collection(collection.STUDENT_COLLECTION).insertOne(details).then(()=>{
+                resolve()
+            })
+        })
+        
+    },
+    getAllStudents:()=>{
+        return new Promise((resolve, reject) => {
+            db.get().collection(collection.STUDENT_COLLECTION).find({}).toArray().then((students)=>{
+                console.log(students);
+                resolve(students)
+            })
+        })
+        
+    },
+    increaseAdmissionNum:()=>{
+        return new Promise((resolve, reject) => {
+            db.get().collection(collection.CLASS_INFO_COLLECTION)
+            .updateOne({_id:objectId('5fc9b867640f9416cb653859')},{
+                $inc:{'lastAdmissionNum':1}
+            }).then(()=>{
+                resolve()
             })
         })
         
