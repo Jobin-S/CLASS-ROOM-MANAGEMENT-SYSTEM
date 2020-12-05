@@ -123,5 +123,38 @@ module.exports = {
             })
         })
         
+    },
+    deleteStudent:(id)=>{
+        return new Promise((resolve, reject) => {
+            db.get().collection(collection.STUDENT_COLLECTION)
+            .deleteOne({_id:objectId(id)}).then(()=>{
+                resolve()
+            })
+        })
+    },
+    getOneStudent:(id)=>{
+        return new Promise((resolve, reject) => {
+            db.get().collection(collection.STUDENT_COLLECTION)
+            .findOne({_id:objectId(id)}).then((student)=>{
+                resolve(student)
+            })
+        })
+        
+    },
+    editStudent:(details)=>{
+        return new Promise((resolve, reject) => {
+            db.get().collection(collection.STUDENT_COLLECTION)
+            .updateOne({_id:objectId(details._id)},{
+                $set:{
+                    fname:details.fname,
+                    lname:details.fname,
+                    gender:details.gender,
+                    dob:details.dob,
+                    phone:details.phone,
+                    email:details.email
+                }
+            }).then(()=>{resolve()})
+        })
+        
     }
 }

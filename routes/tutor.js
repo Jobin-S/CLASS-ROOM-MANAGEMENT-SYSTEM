@@ -226,4 +226,33 @@ router.post('/admission', (req, res)=>{
   })
 })
 
+router.post('/delete/:id',(req, res)=>{
+  let id  = req.params.id
+  tutorHelpers.deleteStudent(id).then(()=>{
+    res.json({status:true})
+  })
+})
+
+router.get('/edit/:id',verifyLogin, async (req, res)=>{
+  let id  = req.params.id
+  let tutorName = await tutorHelpers.getTutorName(req.session.tutor.email)
+  let image = await tutorHelpers.getProfilePic(req.session.tutor.email)
+  let student = await tutorHelpers.getOneStudent(id)
+  let isMale =  student.gender=='Male' ?  true:false
+  res.render('tutor/edit-student',{ 
+    tutor:true,
+    student,
+    isMale,
+    title:'Edit student',
+    tutorName:tutorName,
+    profilePic:image,
+  })
+})
+
+router.post('/edit', (req, res)=>{
+  tutorHelpers.editStudent(req.body).then(()=>{
+    res.redirect('/tutor/all-students')
+  })
+})
+
 module.exports = router;

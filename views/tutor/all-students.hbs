@@ -77,21 +77,21 @@
                             <td class="text-center"><img src="/img/figure/student2.png" alt="student"></td>
                             <td>{{fname}}</td>
                             <td>{{gender}}</td>
-                            <td>2</td>
+                            <td>11</td>
                             
                             
                             <td>{{dob}}</td>
                             <td>{{phone}}</td>
-                            <td>{{email}}</td>
+                            <td>{{email}}   </td>
                             <td>
                                 <div class="dropdown">
                                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
                                         <span class="flaticon-more-button-of-three-dots"></span>
                                     </a>
                                     <div class="dropdown-menu dropdown-menu-right">
-                                        <a class="dropdown-item" href="#"><i
-                                                class="fas fa-times text-orange-red"></i>Remove</a>
-                                        <a class="dropdown-item" href="#"><i
+                                        <a class="dropdown-item" href="#" onclick="deleteStudent('{{_id}}')"><i
+                                                class="fas fa-times text-orange-red"></i>Delete</a>
+                                        <a class="dropdown-item" href="/tutor/edit/{{_id}}"><i
                                                 class="fas fa-cogs text-dark-pastel-green"></i>Edit</a>
                                         
                                     </div>
@@ -108,3 +108,18 @@
     <!-- Student Table Area End Here -->
   
 <!-- Page Area End Here -->
+
+<script>
+    let deleteStudent = function (id) {
+        $.ajax({
+            url:`/tutor/delete/${id}`,
+            method:'post',
+            data:{id:id},
+            success:(response)=>{
+                if(response.status){
+                    location.reload()
+                }                
+            }
+        })
+    }
+</script>

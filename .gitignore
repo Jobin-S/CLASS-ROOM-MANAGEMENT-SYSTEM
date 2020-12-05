@@ -1,3 +1,4 @@
 node_modules/*
 public/uploads/tutor/*
 !public/uploads/tutor/defaultProfilePic.jpg
+.env
