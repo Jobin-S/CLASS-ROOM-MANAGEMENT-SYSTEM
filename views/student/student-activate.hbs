@@ -30,6 +30,7 @@
     let generateOtp = function () {
         let num = document.getElementById('phoneNum').value
         let confirm = document.getElementById('confirm')
+        console.log('called generate otp function'+num)
         $.ajax({
             url: '/send-otp',
             method: 'post',
@@ -45,6 +46,8 @@
                     } else {
                         verifyOtp(otp)
                     }
+                }else{
+                    alert('Your number is not registered by your tutor')
                 }
             }
         })
@@ -58,7 +61,7 @@
             data:{otp:otp},
             success:(response)=>{
                 if(response.status == 'success'){
-                    location.href('/register')
+                    location.href='/register'
                 }else{
                     alert(response.status,' : ', response.error)
                 }

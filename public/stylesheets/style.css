@@ -1,3 +1,12 @@
 .bold-text{
   font-weight: bolder !important;
 }
+
+.swal2-popup {
+  font-size: 1.6rem !important;
+}
+
+.cropper__div img{
+  display: block;
+  max-width: 100%;
+}

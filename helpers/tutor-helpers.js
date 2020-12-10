@@ -147,7 +147,7 @@ module.exports = {
             .updateOne({_id:objectId(details._id)},{
                 $set:{
                     fname:details.fname,
-                    lname:details.fname,
+                    lname:details.lname,
                     gender:details.gender,
                     dob:details.dob,
                     phone:details.phone,

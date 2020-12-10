@@ -4,11 +4,14 @@ const { post } = require('../app')
 const objectId = require('mongodb').ObjectID
 require('dotenv').config()
 var unirest = require('unirest');
+const bcrypt = require('bcrypt')
 
 
 module.exports = {
     sendOtp:(phone)=>{
-        return new Promise((resolve, reject) => {
+        return new Promise(async(resolve, reject) => {
+            let student = await db.get().collection(collection.STUDENT_COLLECTION).findOne({phone:phone})
+            if (!student) reject()
             var req = unirest('POST', 'https://d7networks.com/api/verifier/send')
             .headers({
                 'Authorization': `Token ${process.env.TOKEN}`
@@ -38,6 +41,53 @@ module.exports = {
             });
         })
         
+    },
+    register:(phone, password)=>{
+      return new Promise(async(resolve, reject) => {
+        let hashedPassword =await bcrypt.hash(password, 10)
+        db.get().collection(collection.STUDENT_COLLECTION).updateOne({phone:phone},{
+          $set:{
+            password:hashedPassword
+          }
+        }).then(()=>{
+          resolve()
+        })
+      })
+      
+    },
+    getStudent:(phone)=>{
+      return new Promise((resolve, reject) => {
+        db.get().collection(collection.STUDENT_COLLECTION).findOne({phone:phone}).then((student)=>{
+          resolve(student)
+        })
+      })
+      
+    },
+    doLogin:(details)=>{
+      return new Promise(async(resolve, reject) => {
+        let response = {}
+           var user = await db.get().collection(collection.STUDENT_COLLECTION).findOne({phone:details.phone})
+           
+           console.log(user);
+           if (user == null) {
+               console.log('login failed');
+               resolve({status:false, message:'Phone num not found'})
+            }else{
+                bcrypt.compare(details.password, user.password).then((status)=>{
+                    if (status){
+                        console.log('login succesfull');
+                        response.user = user;
+                        response.status = status
+                        
+                        resolve(response)
+                    }else{
+                        console.log('failed');
+                        resolve({status:false, message:'password Incorrect'})
+                    }
+                })
+            }
+      })
+      
     }
        
 }

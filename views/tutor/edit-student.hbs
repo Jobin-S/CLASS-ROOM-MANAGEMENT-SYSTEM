@@ -28,11 +28,11 @@
                     </div>
                 </div>
             </div>
-            <form class="new-added-form" method="POST" action="/tutor/edit">
+            <form class="new-added-form" id="editForm">
                 <div class="row">
                     <div class="col-xl-3 col-lg-6 col-12 form-group">
                         <label>First Name *</label>
-                        <input type="text" name="fname" value="{{student.fname}}" placeholder="" class="form-control">
+                        <input type="text" name="fname" value="{{student.fname}}" id="name" class="form-control">
                     </div>
                     <div class="col-xl-3 col-lg-6 col-12 form-group">
                         <label>Last Name *</label>
@@ -41,21 +41,21 @@
                     <input type="text" value="{{student._id}}" hidden name="_id">
                     <div class="col-xl-3 col-lg-6 col-12 form-group">
                         <label>Gender *</label>
-                        <select class="select2" name="gender">
+                        <select id="gender" class="select2" name="gender">
                             {{#if isMale }}
-                                <option selected value="Male">Male</option>
-                                <option value="Female">Female</option>
+                            <option selected value="Male">Male</option>
+                            <option value="Female">Female</option>
 
-                                {{else}}
-                                <option selected value="Female">Female</option>
-                                <option value="Male">Male</option>
+                            {{else}}
+                            <option selected value="Female">Female</option>
+                            <option value="Male">Male</option>
                             {{/if}}
-                            
+
                         </select>
                     </div>
                     <div class="col-xl-3 col-lg-6 col-12 form-group">
                         <label>Date Of Birth *</label>
-                        <input type="text" name="dob" value="{{student.dob}}" placeholder="dd/mm/yyyy"
+                        <input type="text" id="dob" name="dob" value="{{student.dob}}" placeholder="dd/mm/yyyy"
                             class="form-control air-datepicker" data-position='bottom right'>
                         <i class="far fa-calendar-alt"></i>
                     </div>
@@ -75,7 +75,7 @@
 
                     <div class="col-xl-3 col-lg-6 col-12 form-group">
                         <label>E-Mail</label>
-                        <input type="email" name="email" value="{{student.email}}" placeholder="" class="form-control">
+                        <input type="email" name="email" value="{{student.email}}" id="email" class="form-control">
                     </div>
 
 
@@ -86,7 +86,7 @@
                     </div>
                     <div class="col-xl-3 col-lg-6 col-12 form-group">
                         <label>Phone</label>
-                        <input type="text" placeholder="" name="phone" value="{{student.phone}}" class="form-control">
+                        <input type="text" id="phone" name="phone" value="{{student.phone}}" class="form-control">
                     </div>
                     {{!-- <div class="col-lg-6 col-12 form-group">
                         <label>Short BIO</label>
@@ -98,7 +98,8 @@
                         <input type="file" class="form-control-file">
                     </div>
                     <div class="col-12 form-group mg-t-8">
-                        <button type="submit" class="btn-fill-lg btn-gradient-yellow btn-hover-bluedark">Save</button>
+                        <a onclick="editStudent()"
+                            class="text-light btn-fill-lg btn-gradient-yellow btn-hover-bluedark">Save</a>
                         <button type="reset" class="btn-fill-lg bg-blue-dark btn-hover-yellow">Reset</button>
                     </div>
                 </div>
@@ -106,3 +107,41 @@
         </div>
     </div>
     <!-- Admit Form Area End Here -->
+
+    <script>
+
+        let editStudent = function () {
+            let name, gender, dob, email, phone
+            name = document.getElementById('name').value
+            gender = document.getElementById('gender').value
+            dob = document.getElementById('dob').value
+            email = document.getElementById('email').value
+            phone = document.getElementById('phone').value
+
+            let confirmationText = `Name: ${name}\nGender: ${gender}\nDate Of Birth: ${dob}\nEmail: ${email}\nPhone Number:${phone}`
+
+
+            Swal.fire({
+                title: 'Is this okay?',
+                html: '<pre>' + confirmationText + '</pre>',
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, Edit it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url:'/tutor/edit',
+                        method:'post',
+                        data:$('#editForm').serialize(),
+                        success:(response)=>{
+                            location.href = '/tutor/all-students'
+                        }
+                    })
+                }
+            })
+        }
+
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>

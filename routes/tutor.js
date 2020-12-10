@@ -47,21 +47,28 @@ router.get('/all-students',verifyLogin,async (req, res)=>{
   let tutorName = await tutorHelpers.getTutorName(req.session.tutor.email)
   let image = await tutorHelpers.getProfilePic(req.session.tutor.email)
   let students = await tutorHelpers.getAllStudents()
+  let studentEdited = req.session.editStudent
+  let studentAdded = req.session.studentAdded
 
   res.render('tutor/all-students', {
     title:'All Students',
     tutor:true,
     tutorName:tutorName,
     profilePic:image,
+    studentAdded:studentAdded,
+    isStudentEdited:studentEdited,
     students:students,
     all_students:sidebarToggle  
   })
+  req.session.editStudent = false
+  req.session.studentAdded = false
 })
 
 router.get('/admission',verifyLogin,async (req, res)=>{
   let tutorName = await tutorHelpers.getTutorName(req.session.tutor.email)
   let image = await tutorHelpers.getProfilePic(req.session.tutor.email)
   let newAdmissionNum = await tutorHelpers.getNewAdmissionNo()
+  
 
   res.render('tutor/admission', {
     title:'Student Admission Form',
@@ -71,6 +78,7 @@ router.get('/admission',verifyLogin,async (req, res)=>{
     admissionNum:newAdmissionNum,
     student_admission:sidebarToggle  
   })
+  
 })
 
 router.get('/attendance',verifyLogin,async (req, res)=>{
@@ -220,6 +228,7 @@ router.post('/editprofile-image', uploadImage, (req, res)=>{
 
 router.post('/admission', (req, res)=>{
   tutorHelpers.studentRegister(req.body).then(()=>{
+    req.session.studentAdded = true
     tutorHelpers.increaseAdmissionNum().then(()=>{
       res.redirect('/tutor/all-students')
     })
@@ -250,9 +259,19 @@ router.get('/edit/:id',verifyLogin, async (req, res)=>{
 })
 
 router.post('/edit', (req, res)=>{
+  console.log(req.body);
   tutorHelpers.editStudent(req.body).then(()=>{
-    res.redirect('/tutor/all-students')
+    req.session.editStudent = true
+    res.json({status:true})
   })
+})
+
+router.post('/upload-studentImg',(req, res)=>{
+  console.log('body :',req.body)
+  console.log('file :',req.file)
+  console.log('files :',req.files)
+  // console.log('req :',req)
+  
 })
 
 module.exports = router;

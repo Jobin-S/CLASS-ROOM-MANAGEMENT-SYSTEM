@@ -1,3 +1,6 @@
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.9/cropper.css"
+    integrity="sha512-949FvIQOibfhLTgmNws4F3DVlYz3FmCRRhJznR22hx76SKkcpZiVV5Kwo0iwK9L6BFuY+6mpdqB2+vDIGVuyHg=="
+    crossorigin="anonymous" />
 
 <div class="dashboard-content-one">
     <!-- Breadcubs Area Start Here -->
@@ -29,7 +32,7 @@
                     </div>
                 </div>
             </div>
-            <form class="new-added-form" method="POST" action="/tutor/admission">
+            <form class="new-added-form" id="admissionForm" method="POST" action="/tutor/admission">
                 <div class="row">
                     <div class="col-xl-3 col-lg-6 col-12 form-group">
                         <label>First Name *</label>
@@ -50,11 +53,11 @@
                     </div>
                     <div class="col-xl-3 col-lg-6 col-12 form-group">
                         <label>Date Of Birth *</label>
-                            <input type="text" name="dob" placeholder="dd/mm/yyyy" class="form-control air-datepicker"
+                        <input type="text" name="dob" placeholder="dd/mm/yyyy" class="form-control air-datepicker"
                             data-position='bottom right'>
                         <i class="far fa-calendar-alt"></i>
                     </div>
-                    
+
                     {{!-- <div class="col-xl-3 col-lg-6 col-12 form-group">
                         <label>Blood Group *</label>
                         <select class="select2">
@@ -67,16 +70,17 @@
                             <option value="3">O-</option>
                         </select>
                     </div> --}}
-                    
+
                     <div class="col-xl-3 col-lg-6 col-12 form-group">
                         <label>E-Mail</label>
                         <input type="email" name="email" placeholder="" class="form-control">
                     </div>
-                    
-                    
+
+
                     <div class="col-xl-3 col-lg-6 col-12 form-group">
                         <label>Admission ID</label>
-                        <input type="text" name="admissionNum" value="{{admissionNum}}" class="form-control" readonly="readonly">
+                        <input type="text" name="admissionNum" value="{{admissionNum}}" class="form-control"
+                            readonly="readonly">
                     </div>
                     <div class="col-xl-3 col-lg-6 col-12 form-group">
                         <label>Phone</label>
@@ -99,4 +103,157 @@
             </form>
         </div>
     </div>
+    <div>
+
+        {{!-- <div class="cropper__div">
+            <img id="blah" src="#" alt="your image" />
+        </div> --}}
+        <div id="cropped_result"></div>
+        <button id="crop_button">Crop</button>
+        <a onclick="popUpUpload()" class="btn btn-success">choose</a>
+
+
+    </div>
     <!-- Admit Form Area End Here -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.9/cropper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.12.0/dist/sweetalert2.all.min.js"></script>
+    <script src="/js/jquery-3.3.1.min.js"></script>
+
+    <script>
+        let popUpUpload = async function () {
+            const { value: file } = await swal.fire({
+                title: 'upload Image',
+                input: 'file',
+                inputAttributes: {
+                    'accept': 'image/*',
+                    'aria-label': 'Upload your profile picture'
+                },
+                showCancelButton: true,
+                confirmButtonText: 'UPLOAD',
+                preConfirm: () => {
+                    setTimeout(initCrop, 1000);
+                }
+            })
+            if (file) {
+                readURL(file)
+            }
+        }
+
+        var cropper;
+
+        function readURL(input) {
+            if (input) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    $('#blah').attr('src', e.target.result)
+                };
+                reader.readAsDataURL(input);
+                swal.fire({
+                    title: 'crop',
+                    html: "<div class='cropper__div'><img id='blah' id='cropping__area' src='#' alt='your image' /></div>",
+                    showCancelButton: true,
+                    confirmButtonText: 'CROP',
+                    showLoaderOnConfirm: true,
+                    allowOutsideClick: false,
+                    preConfirm: () => {
+                        console.log('preconfirm')
+                        var imgurl = cropper.getCroppedCanvas().toDataURL();
+                        console.log('imgurl: ', imgurl)
+                        convertURIToImageData(imgurl).then(function (imageData) {
+                            // Here you can use imageData
+                            console.log(imageData);
+                            var img = document.createElement("img");
+                        img.src = imgurl;
+                        document.getElementById("cropped_result").appendChild(img);
+
+                        //cropper.getCroppedCanvas().toBlob(function (blob) {
+
+
+                            //var formData = new FormData(admissionForm);
+                            //formData.append('croppedImage', blob);
+                            //console.log(formData)
+                            console.log(blob)
+
+                            // Use `jQuery.ajax` method
+                            $.ajax({
+                                url: '/tutor/upload-studentImg',
+                                method: 'post',
+                                data: {
+                                    imageData
+                                },
+                                success: () => {
+                                    console.log('success')
+                                }
+                            })
+                        //}); 
+                        });
+                        
+
+                    }
+                })
+            }
+        }
+
+
+        function convertURIToImageData(URI) {
+            return new Promise(function (resolve, reject) {
+                if (URI == null) return reject();
+                var canvas = document.createElement('canvas'),
+                    context = canvas.getContext('2d'),
+                    image = new Image();
+                image.addEventListener('load', function () {
+                    canvas.width = image.width;
+                    canvas.height = image.height;
+                    context.drawImage(image, 0, 0, canvas.width, canvas.height);
+                    resolve(context.getImageData(0, 0, canvas.width, canvas.height));
+                }, false);
+                image.src = URI;
+            });
+        }
+
+
+
+
+        function initCrop() {
+            console.log('intiCrop')
+            var image = document.getElementById('blah');
+            cropper = new Cropper(image, {
+                aspectRatio: 1 / 1,
+                viewMode: 2,
+                dragMode: 'move',
+                allowOutsideClick: false,
+                crop: function (e) {
+                    console.log(e.detail.x);
+                    console.log(e.detail.y);
+                }
+            });
+        }
+
+
+
+
+        function initCropper() {
+            var image = document.getElementById('blah');
+            var cropper = new Cropper(image, {
+                aspectRatio: 1 / 1,
+                viewMode: 2,
+                dragMode: 'move',
+                crop: function (e) {
+                    console.log(e.detail.x);
+                    console.log(e.detail.y);
+                }
+            });
+        }
+
+        // On crop button clicked
+        /*document.getElementById('crop_button').addEventListener('click', function () {
+            var imgurl = cropper.getCroppedCanvas().toDataURL();
+            var img = document.createElement("img");
+            img.src = imgurl;
+            document.getElementById("cropped_result").appendChild(img);
+
+        }*/
+
+
+
+    </script>

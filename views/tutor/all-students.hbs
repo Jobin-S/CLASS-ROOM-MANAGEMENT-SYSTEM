@@ -78,22 +78,23 @@
                             <td>{{fname}}</td>
                             <td>{{gender}}</td>
                             <td>11</td>
-                            
-                            
+
+
                             <td>{{dob}}</td>
                             <td>{{phone}}</td>
-                            <td>{{email}}   </td>
+                            <td>{{email}} </td>
                             <td>
                                 <div class="dropdown">
                                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
                                         <span class="flaticon-more-button-of-three-dots"></span>
                                     </a>
                                     <div class="dropdown-menu dropdown-menu-right">
-                                        <a class="dropdown-item" href="#" onclick="deleteStudent('{{_id}}')"><i
+                                        <a class="dropdown-item" href="#"
+                                            onclick="deleteStudent('{{_id}}', '{{fname}}')"><i
                                                 class="fas fa-times text-orange-red"></i>Delete</a>
                                         <a class="dropdown-item" href="/tutor/edit/{{_id}}"><i
                                                 class="fas fa-cogs text-dark-pastel-green"></i>Edit</a>
-                                        
+
                                     </div>
                                 </div>
                             </td>
@@ -106,20 +107,88 @@
         </div>
     </div>
     <!-- Student Table Area End Here -->
-  
-<!-- Page Area End Here -->
 
-<script>
-    let deleteStudent = function (id) {
-        $.ajax({
-            url:`/tutor/delete/${id}`,
-            method:'post',
-            data:{id:id},
-            success:(response)=>{
-                if(response.status){
-                    location.reload()
-                }                
+    <!-- Page Area End Here -->
+
+    <script>
+
+        let deleteStudent = function (id, name) {
+            Swal.fire({
+                title: 'Are you sure?',
+                text: `${name} will be deleted from your class`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: `/tutor/delete/${id}`,
+                        method: 'post',
+                        data: { id: id },
+                        success: (response) => {
+                            if (response.status) {
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Deleted student',
+                                    text: `${name} is deleted!`
+                                })
+                                location.reload()
+                            }
+                            
+                        }
+                    })
+
+                }
+            })
+
+        }
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.12.0/dist/sweetalert2.all.min.js"></script>
+
+    {{#if isStudentEdited}}
+    <script>
+        const Toast = Swal.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+                toast.addEventListener('mouseenter', Swal.stopTimer)
+                toast.addEventListener('mouseleave', Swal.resumeTimer)
             }
         })
-    }
-</script>
+
+        Toast.fire({
+            icon: 'success',
+            title: 'Edited successfully'
+        })
+    </script>
+    {{/if}}
+    {{#if studentAdded}}
+    <script>
+        const Toast = Swal.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+                toast.addEventListener('mouseenter', Swal.stopTimer)
+                toast.addEventListener('mouseleave', Swal.resumeTimer)
+            }
+        })
+
+        Toast.fire({
+            icon: 'success',
+            title: 'Added successfully'
+        })
+    </script>
+    {{/if}}
+
+
+    <!-- Optional: include a polyfill for ES6 Promises for IE11 -->
+    {{!-- 
+    <script src="https://cdn.jsdelivr.net/npm/promise-polyfill"></script> --}}
