@@ -162,6 +162,8 @@
                         convertURIToImageData(imgurl).then(function (imageData) {
                             // Here you can use imageData
                             console.log(imageData);
+                            console.log(imageData.length);
+
                             var img = document.createElement("img");
                         img.src = imgurl;
                         document.getElementById("cropped_result").appendChild(img);
@@ -172,17 +174,18 @@
                             //var formData = new FormData(admissionForm);
                             //formData.append('croppedImage', blob);
                             //console.log(formData)
-                            console.log(blob)
+//                            console.log(blob)
 
                             // Use `jQuery.ajax` method
+                            console.log('ajax')
                             $.ajax({
-                                url: '/tutor/upload-studentImg',
+                                url: '/upload-studentImg',
+                                processData: false,
+        contentType: false,
                                 method: 'post',
-                                data: {
-                                    imageData
-                                },
-                                success: () => {
-                                    console.log('success')
+                                data: {imageData},
+                                success: (res) => {
+                                    console.log(res)
                                 }
                             })
                         //}); 

@@ -271,7 +271,7 @@ router.post('/upload-studentImg',(req, res)=>{
   console.log('file :',req.file)
   console.log('files :',req.files)
   // console.log('req :',req)
-  
+  res.json({status:'success'})
 })
 
 module.exports = router;

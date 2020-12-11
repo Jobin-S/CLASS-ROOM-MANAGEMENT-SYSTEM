@@ -1,4 +1,5 @@
 const mongoClient = require('mongodb').MongoClient
+// const {MongoClient} = require('mongodb')
 
 const state ={
     db:null
@@ -14,6 +15,7 @@ module.exports.connect = ()=>{
         state.db = data.db(dbName)
         resolve()
         })
+
     })
     
 }
