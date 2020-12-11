@@ -2,13 +2,24 @@ var express = require('express');
 var router = express.Router();
 var studentHelpers = require('../helpers/student-helpers')
 
-
-router.get('/', (req, res)=>{
+const verifyLogin = (req, res, next)=>{
+  req.session.previousPath = false
   if(req.session.studentLoggedIn){
-    res.render('index',{title:'students dashboard',student: req.session.student}) 
+    req.session.previousPath = req.path
+    next()
   }else{
+    req.session.redirectTo = req.path
     res.redirect('/login')
   }
+}
+
+router.get('/',verifyLogin, (req, res)=>{
+  
+    res.render('student/dashboard',{
+      title:'students dashboard',
+      student: req.session.student
+    }) 
+  
 })
 
 router.get('/activate', function(req, res, next) {
@@ -54,12 +65,19 @@ router.post('/register',(req, res)=>{
   })
 })
 
-router.get('/login', (req, res)=>{
+router.get('/login',(req, res)=>{
   if(req.session.studentLoggedIn){
-    res.redirect('/')
+
+    if(req.session.previousPath){
+      location = req.session.previousPath
+      console.log('previous path');
+    }else{
+      location = req.session.redirectTo ? req.session.redirectTo :'/'
+    }
+    res.redirect(location)
   }else{
     res.render('student/login',{loginError:req.session.loginError})
-    req.session.loginError = null
+    req.session.loginError = false
   }
 })
 
@@ -77,5 +95,48 @@ router.post('/login',(req, res)=>{
     }
   })
 })
+
+router.get('/attendance',verifyLogin, (req, res)=>{
+  res.render('student/attendance',{
+    title:'Attendance',
+    student: req.session.student
+  })
+})
+
+router.get('/logout',(req, res)=>{
+  req.session.studentLoggedIn = false;
+  req.session.student = null;
+  res.redirect('/login')
+})
+
+router.get('/task', verifyLogin, (req, res)=>{
+  res.render('student/task',{
+    student:req.session.student,
+    title:"Today's Task"
+  })
+})
+
+router.get('/profile', verifyLogin, (req, res)=>{
+  res.render('student/profile',{
+    student:req.session.student,
+    title:'profile'
+  })
+})
+
+router.get('/assignments', verifyLogin, (req, res)=>{
+  res.render('student/assignments',{
+    title:'assignments',
+    student:req.session.student
+  })
+})
+
+router.get('/notes', verifyLogin, (req, res)=>{
+  res.render('student/notes',{
+    title:'Notes',
+    student:req.session.student
+  })
+})
+
+
 
 module.exports = router;

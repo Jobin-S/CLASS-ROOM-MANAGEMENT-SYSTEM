@@ -15,6 +15,17 @@ const storage = multer.diskStorage({
   }
 })
 
+const pdfStorage = multer.diskStorage({
+  destination:`${__dirname}/../public/pdf/tutor/`,
+  filename:(req, file, cb)=>{
+    const fileName = `${Date.now()}${path.extname(file.originalname)}`
+    req.session.fileAddedName = fileName
+    cb(null, fileName)
+  }
+})
+
+const uploadPdf = multer({storage:pdfStorage})
+
 const uploadImage = multer({storage}).single('photo')
 
 const verifyLogin = (req, res, next)=>{
@@ -89,7 +100,6 @@ router.get('/attendance',verifyLogin,async (req, res)=>{
     title:'Attendance',
     tutor:true,
     profilePic:image,
-
     tutorName:tutorName,
     attendance:sidebarToggle
   })
@@ -113,12 +123,15 @@ router.get('/notice',verifyLogin,async (req, res)=>{
 router.get('/assignments',verifyLogin,async(req, res)=>{
   let tutorName = await tutorHelpers.getTutorName(req.session.tutor.email)
   let image = await tutorHelpers.getProfilePic(req.session.tutor.email)
+  let assignments = await tutorHelpers.getAssignments()
+  
 
   res.render('tutor/assignments',{
     title:'All Asssignments',
     tutor:true,
     tutorName:tutorName,
     profilePic:image,
+    assignmentsDetails:assignments,
 
     assignments:sidebarToggle
   })
@@ -272,6 +285,20 @@ router.post('/upload-studentImg',(req, res)=>{
   console.log('files :',req.files)
   // console.log('req :',req)
   res.json({status:'success'})
+})
+
+router.post('/add-assignment', uploadPdf.single('pdf'), (req, res)=>{
+  let filename = req.session.fileAddedName
+  tutorHelpers.addAssignments(req.body, filename).then(()=>{
+    req.session.fileAddedName = null
+    res.redirect('/tutor/assignments')
+  })
+})
+
+router.post('/assignments/delete/:id',(req, res)=>{
+  tutorHelpers.deleteAssignment(req.params.id).then(()=>{
+    res.json({status:true})
+  })
 })
 
 module.exports = router;

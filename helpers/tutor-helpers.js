@@ -156,5 +156,44 @@ module.exports = {
             }).then(()=>{resolve()})
         })
         
+    },
+    addAssignments:(details, fileName)=>{
+        return new Promise((resolve, reject) => {
+            db.get().collection(collection.ASSIGNMENT_COLLECTION)
+            .insertOne({
+                topic:details.topic,
+                dateTime:Date(Date.now()),
+                file:fileName
+            }).then(()=>{ 
+                resolve()
+            })
+        })
+        
+    },
+    getAssignments:()=>{
+        return new Promise((resolve, reject) => {
+            db.get().collection(collection.ASSIGNMENT_COLLECTION)
+            .find().toArray().then((assignments)=>{
+                
+                for (var i in assignments) {
+                    dt = assignments[i].dateTime.trim().split(" ");
+                    assignments[i].date = `${dt[1]} ${dt[2]} ${dt[3]}`
+                    assignments[i].time = dt[4]
+                
+                  }
+                  console.log(assignments);
+                  resolve(assignments)
+            })
+        })
+        
+    },
+    deleteAssignment:(id)=>{
+        return new Promise((resolve, reject) => {
+            db.get().collection(collection.ASSIGNMENT_COLLECTION)
+            .deleteOne({_id:objectId(id)}).then(()=>{
+                resolve()
+            })
+        })
+        
     }
 }

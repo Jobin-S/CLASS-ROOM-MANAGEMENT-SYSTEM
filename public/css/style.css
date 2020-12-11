@@ -4200,6 +4200,9 @@ ul {
 .bg-light-green {
   background-color: #d1f3e0;
 }
+.bg-dark-pastel-red {
+  background-color: #dd1515;
+}
 .bg-dark-pastel-green {
   background-color: #00c853;
 }
@@ -4629,8 +4632,12 @@ ul {
 .pseudo-bg-yellow:after {
   background-color: #ffaa01;
 }
+.pseudo-bg-green:after {
+  background-color: #5df00e;
+}
+
 .pseudo-bg-red:after {
-  background-color: #ff0000;
+  background-color: #f00216;
 }
 .pseudo-bg-pink:after {
   background-color: #f939a1;
@@ -4652,6 +4659,10 @@ ul {
 .shadow-dark-pastel-green {
   -webkit-box-shadow: 0px 6px 8px 0px rgba(0, 200, 83, 0.4);
   box-shadow: 0px 6px 8px 0px rgba(0, 200, 83, 0.4);
+}
+.shadow-dark-pastel-red {
+  -webkit-box-shadow: 0px 6px 8px 0px rgba(233, 21, 21, 0.4);
+  box-shadow: 0px 6px 8px 0px rgba(233, 21, 21, 0.4);
 }
 .shadow-true-v {
   -webkit-box-shadow: 0px 6px 8px 0px rgba(149, 117, 205, 0.4);

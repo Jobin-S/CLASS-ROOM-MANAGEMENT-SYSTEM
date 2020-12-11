@@ -9,6 +9,7 @@ const bcrypt = require('bcrypt')
 
 module.exports = {
     sendOtp:(phone)=>{
+        
         return new Promise(async(resolve, reject) => {
             let student = await db.get().collection(collection.STUDENT_COLLECTION).findOne({phone:phone})
             if (!student) reject()
@@ -21,6 +22,7 @@ module.exports = {
             .field('message', 'Your otp for ECLASS activation is {code}')
             .field('expiry', '900')
             .end(function (res) {
+              console.log(res.body);
               resolve(res.body.otp_id)
             });
         })

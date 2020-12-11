@@ -12,7 +12,7 @@ db.connect().then((error)=>{
   else console.log('Database connected succesfully');
 })
 
-var indexRouter = require('./routes/index');
+var studentRouter = require('./routes/student');
 var tutorRouter = require('./routes/tutor');
 
 var app = express();
@@ -40,7 +40,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 let sessionTime = new Date(Date.now() + (30 * 86400 * 1000))
 app.use(session({secret:'key',resave:true, saveUninitialized:true, cookie:{maxAge:sessionTime}}))
 
-app.use('/', indexRouter);
+app.use('/', studentRouter);
 app.use('/tutor', tutorRouter);
 
 // catch 404 and forward to error handler

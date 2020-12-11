@@ -43,6 +43,8 @@
 <body>
     {{#if tutor}}
     {{> tutor-sidebar}}
+        {{else if student}}
+            {{> student-sidebar}}
     {{/if}}
     {{{body}}}
 
