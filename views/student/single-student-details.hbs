@@ -1,0 +1,73 @@
+<div class="dashboard-content-one">
+    <!-- Breadcubs Area Start Here -->
+    <div class="breadcrumbs-area">
+        <h3>{{student.fname}}</h3>
+        <ul>
+            <li>
+                <a href="/">Home</a>
+            </li>
+            <li>Students</li>
+        </ul>
+    </div>
+    <!-- Breadcubs Area End Here -->
+    <div class="card height-auto">
+        
+        <div class="row">
+            <div class="card-body">
+                <div class="col-md-6 m-5 float-right">
+                    <h3>Name: {{student.fname}} {{student.lname}}</h3>
+                    <h3>Admission No: {{student.admissionNum}}</h3>
+                    <h3>Mob: {{student.phone}}</h3>
+                    <h3>Email: {{student.email}}</h3>
+                </div>
+                <div class="col-md-6">
+                    <img style="border-radius: 50%;" src="/uploads/tutor/defaultProfilePic.jpg" height="250px" alt="profile-Pic">
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Student Table Area Start Here -->
+    <div class="card height-auto">
+        <div class="card-body">
+             <div class="heading-layout1">
+                            <div class="item-title">
+                                <h3>Assignments</h3>
+                            </div>
+                           
+                        </div>
+                        
+            <div class="table-responsive">
+                <table class="table display data-table text-nowrap">
+                    <thead>
+                        <tr>
+
+                            <th>No</th>
+                            <th>Topic</th>
+                            <th>File</th>
+                            <th>Date</th>
+
+                            <th>Time</th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#each assignments}}
+                        <tr>
+                            <td>{{@key}}</td>
+                            <td>{{topic}}</td>
+                            <td>{{file}}</td>
+                            <td>{{date}}</td>
+                            <td>{{time}}</td>
+                            <td><a type="button" href="/tutor/assignment/{{id}}"
+                                    class="btn-fill-lmd radius-30 text-light shadow-dark-pastel-green bg-dark-pastel-green">view</a>
+                            </td>
+
+
+
+                        </tr>
+                        {{/each}}
+
+                    </tbody>
+                </table>
+            </div>
+        </div>

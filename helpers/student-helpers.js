@@ -5,7 +5,7 @@ const objectId = require('mongodb').ObjectID
 require('dotenv').config()
 var unirest = require('unirest');
 const bcrypt = require('bcrypt')
-
+const { v4: uuidv4 } = require('uuid')
 
 module.exports = {
     sendOtp:(phone)=>{
@@ -88,6 +88,70 @@ module.exports = {
                     }
                 })
             }
+      })
+      
+    },
+    getAllAssignments:(id)=>{
+      return new Promise((resolve, reject) => {
+        db.get().collection(collection.ASSIGNMENT_COLLECTION)
+        .find().toArray().then(async(assignments)=>{
+          db.get().collection(collection.STUDENT_COLLECTION).find({_id:objectId(id)}).toArray().then((student)=>{
+            console.log('assigmenst in student '+student)
+          for (var i in assignments) {
+            let dt = assignments[i].dateTime.trim().split(" ");
+            assignments[i].date = `${dt[1]} ${dt[2]} ${dt[3]}`
+            assignments[i].time = dt[4]
+
+            
+          }
+          resolve(assignments.reverse())
+          })
+            
+        })
+      })
+      
+    },
+    getSingleAssignment:(id)=>{
+      return new Promise((resolve, reject) => {
+        db.get().collection(collection.ASSIGNMENT_COLLECTION)
+        .findOne({_id:objectId(id)}).then((assignment)=>{
+          resolve(assignment)
+        })
+      })
+      
+    },
+    otpLogin:(isVerified, phone)=>{
+      return new Promise((resolve, reject) => {
+        if(!isVerified) resolve({status:false})
+        db.get().collection(collection.STUDENT_COLLECTION)
+        .findOne({phone:phone}).then((student)=>{
+          resolve(student)
+        })
+      })
+      
+    },
+    submitAssignments:(details,phoneNum, fileName,  Id)=>{
+      return new Promise((resolve, reject) => {
+        db.get().collection(collection.STUDENT_COLLECTION)
+        .updateOne(
+          {phone:phoneNum},
+          {
+            $push:{assignments: {
+              id:uuidv4(),
+              assignmentId:Id,
+              dateTime:Date(Date.now()),
+              file:fileName,
+              topic:details.topic
+            }}
+          },
+          {
+            $set:{
+              isSubmitted:true
+            }
+          }
+        ).then(()=>{
+          resolve()
+        })
       })
       
     }

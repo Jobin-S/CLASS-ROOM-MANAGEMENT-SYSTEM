@@ -98,6 +98,7 @@ module.exports = {
     },
     studentRegister:(details)=>{
         return new Promise((resolve, reject) => {
+            details.assignments = []
             db.get().collection(collection.STUDENT_COLLECTION).insertOne(details).then(()=>{
                 resolve()
             })
@@ -176,7 +177,7 @@ module.exports = {
             .find().toArray().then((assignments)=>{
                 
                 for (var i in assignments) {
-                    dt = assignments[i].dateTime.trim().split(" ");
+                    let dt = assignments[i].dateTime.trim().split(" ");
                     assignments[i].date = `${dt[1]} ${dt[2]} ${dt[3]}`
                     assignments[i].time = dt[4]
                 
@@ -192,6 +193,33 @@ module.exports = {
             db.get().collection(collection.ASSIGNMENT_COLLECTION)
             .deleteOne({_id:objectId(id)}).then(()=>{
                 resolve()
+            })
+        })
+        
+    },
+    getSingleStudentAssignment:(id)=>{
+        return new Promise((resolve, reject) => {
+            db.get().collection(collection.STUDENT_COLLECTION)
+            .findOne({_id:objectId(id)}).then((student)=>{
+                for (var i in student.assignments) {
+                    let dt = student.assignments[i].dateTime.trim().split(" ");
+                    student.assignments[i].date = `${dt[1]} ${dt[2]} ${dt[3]}`
+                    student.assignments[i].time = dt[4]
+                  }
+                
+                
+            })
+        })
+        
+    },
+    getSubmittedAssignment:(id, studentId)=>{
+        return new Promise((resolve, reject) => {
+            db.get().collection(collection.STUDENT_COLLECTION)
+            .findOne({_id:objectId(studentId)}).then((student)=>{
+                console.log(student);
+                let assignment = student.assignments.find(x => x.id === id)
+                console.log(assignment);
+                resolve(assignment)
             })
         })
         

@@ -16,10 +16,10 @@ const storage = multer.diskStorage({
 })
 
 const pdfStorage = multer.diskStorage({
-  destination:`${__dirname}/../public/pdf/tutor/`,
+  destination:`${__dirname}/../public/pdf/tutor/assignments/`,
   filename:(req, file, cb)=>{
     const fileName = `${Date.now()}${path.extname(file.originalname)}`
-    req.session.fileAddedName = fileName
+    req.session.TutorAssignmentAdded = fileName
     cb(null, fileName)
   }
 })
@@ -288,9 +288,9 @@ router.post('/upload-studentImg',(req, res)=>{
 })
 
 router.post('/add-assignment', uploadPdf.single('pdf'), (req, res)=>{
-  let filename = req.session.fileAddedName
+  let filename = req.session.TutorAssignmentAdded
   tutorHelpers.addAssignments(req.body, filename).then(()=>{
-    req.session.fileAddedName = null
+    req.session.TutorAssignmentAdded = null
     res.redirect('/tutor/assignments')
   })
 })
@@ -298,6 +298,39 @@ router.post('/add-assignment', uploadPdf.single('pdf'), (req, res)=>{
 router.post('/assignments/delete/:id',(req, res)=>{
   tutorHelpers.deleteAssignment(req.params.id).then(()=>{
     res.json({status:true})
+  })
+})
+
+router.get('/all-students/:id', verifyLogin,async (req, res)=>{
+  let tutorName = await tutorHelpers.getTutorName(req.session.tutor.email)
+  let image = await tutorHelpers.getProfilePic(req.session.tutor.email)
+  let assignments = await tutorHelpers.getSingleStudentAssignment(req.params.id)
+  req.session.currentStudentId = req.params.id
+  let student = await tutorHelpers.getOneStudent(req.params.id)
+  res.render('student/single-student-details',{
+    title:'student',
+    tutor:req.session.tutor,
+    assignments,
+    tutorName,
+    student,
+    profilePic:image
+  })
+})
+
+router.get('/assignment/:id', verifyLogin, async (req, res)=>{
+  let tutorName = await tutorHelpers.getTutorName(req.session.tutor.email)
+  let image = await tutorHelpers.getProfilePic(req.session.tutor.email)
+
+  let assignment = await tutorHelpers.getSubmittedAssignment(req.params.id, req.session.currentStudentId)
+  let student = await tutorHelpers.getOneStudent(req.session.currentStudentId)
+  console.log(student);
+  if(!assignment) res.redirect('/tutor/dashboard')
+  res.render('student/assignment-by-student',{
+    tutor:req.session.tutor,
+    assignment,
+    tutorName,
+    student,
+    profilePic:image
   })
 })
 

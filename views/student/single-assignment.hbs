@@ -1,0 +1,59 @@
+<div class="dashboard-content-one">
+    <!-- Breadcubs Area Start Here -->
+    <div class="breadcrumbs-area">
+        <h3>{{title}}</h3>
+        <ul>
+            <li>
+                <a href="/assignments">Assignments</a>
+            </li>
+            <li>{{assignment.topic}}</li>
+        </ul>
+    </div>
+        <div class="card height-auto">
+        <div class="card-body">
+            <div class="heading-layout1">
+                <div class="item-title">
+                    <h3>Submit Assignment</h3>
+                </div>
+                
+            </div>
+            <form class="new-added-form" method="POST" action="/assignment/submit/{{assignment._id}}" enctype="multipart/form-data"> 
+                <div class="row">
+                    <div class="col-xl-3 col-lg-6 col-12 form-group">
+                        <label>Topic</label>
+                        <input type="text" value="{{assignment.topic}}" readonly name="topic" class="form-control">
+                    </div>
+                    <div class="col-xl-3 col-lg-6 col-12 form-group">
+                        <label>File</label>
+                        <input type="file" name="pdf" placeholder="" class="form-control">
+                    </div>
+                   
+                    <div class="col-md-6 form-group"></div>
+                    <div class="col-12 form-group mg-t-8">
+                        <button type="submit" class="btn-fill-lg btn-gradient-yellow btn-hover-bluedark">Submit</button>
+                        
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <!-- Add Class Area End Here -->
+<div class="card height-auto col-md-12">
+    <div class="card-body text-center">
+        <h2 class="mt-3">Assignment - <span class="text-danger">{{assignment.topic}}</span> </h2>
+        <div class="m-5">
+            <button type="button" onclick="viewAssignment()"
+                                    class=" m-3 btn-fill-lmd radius-30 text-light shadow-dark-pastel-green bg-dark-pastel-green">view</button>
+            
+        </div>
+        <div>
+            <embed src="/pdf/tutor/assignments/{{assignment.file}}" width="100%" style="display: none;" id="pdf" height="1000px"/>
+        </div>
+    </div>
+</div>
+<script>
+    let viewAssignment = function (){
+        let pdf = document.getElementById('pdf')
+        pdf.style.display = 'block'
+    }
+</script>

@@ -1,11 +1,24 @@
 var express = require('express');
 var router = express.Router();
-var studentHelpers = require('../helpers/student-helpers')
+var studentHelpers = require('../helpers/student-helpers');
+var path = require('path')
+var multer = require('multer')
+
+const submitAssignmentStorage = multer.diskStorage({
+  destination:`${__dirname}/../public/pdf/students/assignments/`,
+  filename:(req, file, cb)=>{
+    const fileName = `${Date.now()}${path.extname(file.originalname)}`
+    req.session.studentAssignmentSubmitted = fileName
+    cb(null, fileName)
+  }
+})
+
+const submitAssignment = multer({storage:submitAssignmentStorage})
 
 const verifyLogin = (req, res, next)=>{
-  req.session.previousPath = false
+  req.session.studentPreviousPath = false
   if(req.session.studentLoggedIn){
-    req.session.previousPath = req.path
+    req.session.studentPreviousPath = req.path
     next()
   }else{
     req.session.redirectTo = req.path
@@ -68,8 +81,8 @@ router.post('/register',(req, res)=>{
 router.get('/login',(req, res)=>{
   if(req.session.studentLoggedIn){
 
-    if(req.session.previousPath){
-      location = req.session.previousPath
+    if(req.session.studentPreviousPath){
+      location = req.session.studentPreviousPath
       console.log('previous path');
     }else{
       location = req.session.redirectTo ? req.session.redirectTo :'/'
@@ -123,9 +136,11 @@ router.get('/profile', verifyLogin, (req, res)=>{
   })
 })
 
-router.get('/assignments', verifyLogin, (req, res)=>{
+router.get('/assignments', verifyLogin,async (req, res)=>{
+let assignments = await studentHelpers.getAllAssignments(req.session.student._id)
   res.render('student/assignments',{
     title:'assignments',
+    assignments:assignments,
     student:req.session.student
   })
 })
@@ -134,6 +149,48 @@ router.get('/notes', verifyLogin, (req, res)=>{
   res.render('student/notes',{
     title:'Notes',
     student:req.session.student
+  })
+})
+
+router.get('/assignment/:id',verifyLogin, async(req, res)=>{
+let assignment = await studentHelpers.getSingleAssignment(req.params.id)
+  res.render('student/single-assignment',{
+    title:'assignment',
+    student:req.session.student,
+    assignment:assignment
+  })
+})
+
+router.post('/assignment/submit/:id', submitAssignment.single('pdf') ,(req, res)=>{
+  let filename = req.session.studentAssignmentSubmitted
+  studentHelpers.submitAssignments(req.body, req.session.student.phone, filename, req.params.id).then(()=>{
+    req.session.studentAssignmentSubmitted = null
+    res.redirect('/tutor/assignments')
+  })
+})
+
+router.get('/otp-login',(req, res)=>{
+  if(req.session.studentLoggedIn){
+    res.redirect('/')
+  }else{
+    res.render('student/otp-login',{
+      title:'otp Login'
+    })
+  }
+})
+
+router.post('/otp-login', (req, res)=>{
+  studentHelpers.verifyOtp(req.body.otp, req.session.otpId).then((response)=>{
+    if (response.status == 'success'){
+      req.session.otpVerified = true;
+      studentHelpers.otpLogin(req.session.otpVerified, req.session.studentNum).then((student)=>{
+        req.session.student = student
+        req.session.studentLoggedIn = true
+        res.json({status:'success'})
+      })
+
+    }
+    
   })
 })
 

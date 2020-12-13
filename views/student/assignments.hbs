@@ -9,11 +9,12 @@
             <li>{{title}}</li>
         </ul>
     </div>
+
     <div class="card height-auto">
         <div class="card-body">
             <div class="heading-layout1">
                 <div class="item-title">
-                    <h3>Add New Class Schedule</h3>
+                    <h3>All Class Schedules</h3>
                 </div>
                 <div class="dropdown">
                     <a class="dropdown-toggle" href="#" role="button" data-toggle="dropdown"
@@ -26,132 +27,73 @@
                     </div>
                 </div>
             </div>
-            <form class="new-added-form">
-                <div class="row">
-                    <div class="col-xl-3 col-lg-6 col-12 form-group">
-                        <label>Topic</label>
-                        <input type="text" placeholder="" name="topic" class="form-control">
+            <form class="mg-b-20">
+                <div class="row gutters-8">
+                    <div class="col-3-xxxl col-xl-3 col-lg-3 col-12 form-group">
+                        <input type="text" placeholder="Search by ID ..." class="form-control">
                     </div>
-                    <div class="col-xl-3 col-lg-6 col-12 form-group">
-                        <label>File</label>
-                        <input type="file" name="assignment" placeholder="" class="form-control">
+                    <div class="col-4-xxxl col-xl-4 col-lg-3 col-12 form-group">
+                        <input type="text" placeholder="Search by Name ..." class="form-control">
                     </div>
-                   
-                    <div class="col-md-6 form-group"></div>
-                    <div class="col-12 form-group mg-t-8">
-                        <button type="submit" class="btn-fill-lg btn-gradient-yellow btn-hover-bluedark">Save</button>
-                        
+                    <div class="col-4-xxxl col-xl-3 col-lg-3 col-12 form-group">
+                        <input type="text" placeholder="Search by Class ..." class="form-control">
+                    </div>
+                    <div class="col-1-xxxl col-xl-2 col-lg-3 col-12 form-group">
+                        <button type="submit" class="fw-btn-fill btn-gradient-yellow">SEARCH</button>
                     </div>
                 </div>
             </form>
-        </div>
-    </div>
-    <!-- Class Table Area Start Here -->
-    <div class="card height-auto col-md-12">
-        <div class="card-body">
+            <!-- Class Table Area Start Here -->
+            <div class="card height-auto col-md-12">
+                <div class="card-body">
 
 
-            <div class="table-responsive">
-                <table class="table display data-table text-nowrap">
-                    <thead>
-                        <tr>
-                            <th>No.</th>
-                            <th>Topic</th>
+                    <div class="table-responsive">
+                        <table class="table display data-table text-nowrap">
+                            <thead>
+                                <tr>
+                                    <th>No.</th>
+                                    <th>Topic</th>
 
-                            <th>File</th>
-                            <th>Time</th>
-                            <th>last Date</th>
-                            <th>Status</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>1</td>
-                            <td>Mark Willy</td>
+                                    <th>File</th>
+                                    <th>Time</th>
+                                    <th>last Date</th>
+                                    {{!-- <th>Status</th> --}}
 
-                            <td>classification of computer.pdf</td>
-                            <td>02/05/2001</td>
-                            <td>10.00 am </td>
-                            <td><button type="button"
-                                    class="btn-fill-lmd radius-30 text-light shadow-dark-pastel-green bg-dark-pastel-green">submitted</button>
-                            </td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {{#each assignments}}
+                                <tr>
+                                    <td>{{@key}}</td>
+                                    <td>{{topic}}</td>
 
-                            <td>
-                                <div class="dropdown">
-                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                                        <span class="flaticon-more-button-of-three-dots"></span>
-                                    </a>
-                                    <div class="dropdown-menu dropdown-menu-right">
-                                        <a class="dropdown-item" href="#"><i
-                                                class="fas fa-times text-orange-red"></i>Close</a>
-                                        <a class="dropdown-item" href="#"><i
-                                                class="fas fa-cogs text-dark-pastel-green"></i>Edit</a>
-                                        <a class="dropdown-item" href="#"><i
-                                                class="fas fa-redo-alt text-orange-peel"></i>Refresh</a>
-                                    </div>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>2</td>
-
-                            <td>Jessia Rose</td>
-
-                            <td>classification of computer.pdf</td>
-                            <td>02/05/2001</td>
-                            <td> 12.30 am</td>
-                            <td><button type="button"
-                                    class="btn-fill-lmd radius-30 text-light shadow-red bg-red">pending</button></td>
-
-                            <td>
-                                <div class="dropdown">
-                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                                        <span class="flaticon-more-button-of-three-dots"></span>
-                                    </a>
-                                    <div class="dropdown-menu dropdown-menu-right">
-                                        <a class="dropdown-item" href="#"><i
-                                                class="fas fa-times text-orange-red"></i>Close</a>
-                                        <a class="dropdown-item" href="#"><i
-                                                class="fas fa-cogs text-dark-pastel-green"></i>Edit</a>
-                                        <a class="dropdown-item" href="#"><i
-                                                class="fas fa-redo-alt text-orange-peel"></i>Refresh</a>
-                                    </div>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>3</td>
-
-                            <td>Mark Willy</td>
-
-                            <td>classification of computer.pdf</td>
-                            <td>02/05/2001</td>
-                            <td> 12.30 am</td>
-                            <td><button type="button"
-                                    class="btn-fill-lmd radius-30 text-light shadow-red bg-red">pending</button></td>
-
-                            <td>
-                                <div class="dropdown">
-                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                                        <span class="flaticon-more-button-of-three-dots"></span>
-                                    </a>
-                                    <div class="dropdown-menu dropdown-menu-right">
-                                        <a class="dropdown-item" href="#"><i
-                                                class="fas fa-times text-orange-red"></i>Close</a>
-                                        <a class="dropdown-item" href="#"><i
-                                                class="fas fa-cogs text-dark-pastel-green"></i>Edit</a>
-                                        <a class="dropdown-item" href="#"><i
-                                                class="fas fa-redo-alt text-orange-peel"></i>Refresh</a>
-                                    </div>
-                                </div>
-                            </td>
-                        </tr>
+                                    <td>{{file}}</td>
+                                    <td>{{date}}</td>
+                                    <td>{{time}}</td>
+                                    {{#if isSubmitted}}
+                                    <td><button type="button"
+                                            class="btn-fill-lmd radius-30 text-light shadow-dark-pastel-red bg-dark-pastel-red">Pending</button>
+                                    </td>
+                                    {{else}}
+                                    <td><button type="button"
+                                            class="btn-fill-lmd radius-30 text-light shadow-dark-pastel-red bg-dark-pastel-red">Pending</button>
+                                    </td>
+                                    {{/if}}
+                                    <td><a type="button" href="/assignment/{{_id}}"
+                                            class="btn-fill-lmd radius-30 text-light shadow-dark-pastel-green bg-dark-pastel-green">view</a>
+                                    </td>
 
 
-                    </tbody>
-                </table>
+                                </tr>
+                                {{/each}}
+
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
-        </div>
-    </div>
-    <!-- Class Table Area End Here -->
+           
+            <!-- Class Table Area End Here -->
+            
