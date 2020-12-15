@@ -95,17 +95,26 @@ module.exports = {
       return new Promise((resolve, reject) => {
         db.get().collection(collection.ASSIGNMENT_COLLECTION)
         .find().toArray().then(async(assignments)=>{
-          db.get().collection(collection.STUDENT_COLLECTION).find({_id:objectId(id)}).toArray().then((student)=>{
-            console.log('assigmenst in student '+student)
+          let student = await db.get().collection(collection.STUDENT_COLLECTION).findOne({_id:objectId(id)})
+            console.log(student)
           for (var i in assignments) {
             let dt = assignments[i].dateTime.trim().split(" ");
             assignments[i].date = `${dt[1]} ${dt[2]} ${dt[3]}`
-            assignments[i].time = dt[4]
-
-            
+            assignments[i].time = dt[4]            
           }
+
+          for (var i in student.assignments){
+            let assignmentId = student.assignments[i].assignmentId
+            for (var j in assignments){
+              if(assignmentId == assignments[j]._id){
+                assignments[j].submitted = true
+                assignments[j].mark = student.assignments[i].mark
+              }
+            }
+          }
+          console.log(assignments);
           resolve(assignments.reverse())
-          })
+          
             
         })
       })
@@ -143,13 +152,7 @@ module.exports = {
               file:fileName,
               topic:details.topic
             }}
-          },
-          {
-            $set:{
-              isSubmitted:true
-            }
-          }
-        ).then(()=>{
+          }).then(()=>{
           resolve()
         })
       })

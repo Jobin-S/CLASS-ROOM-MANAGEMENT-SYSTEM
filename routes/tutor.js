@@ -318,6 +318,7 @@ router.get('/all-students/:id', verifyLogin,async (req, res)=>{
 })
 
 router.get('/assignment/:id', verifyLogin, async (req, res)=>{
+  if(!req.session.currentStudentId) res.redirect('/tutor/all-students')
   let tutorName = await tutorHelpers.getTutorName(req.session.tutor.email)
   let image = await tutorHelpers.getProfilePic(req.session.tutor.email)
 
@@ -329,8 +330,17 @@ router.get('/assignment/:id', verifyLogin, async (req, res)=>{
     tutor:req.session.tutor,
     assignment,
     tutorName,
+    title:student.fname,
     student,
     profilePic:image
+  })
+})
+
+router.post('/assignment-mark', (req, res)=>{
+  console.log('api callllll');
+  console.log(req.body);
+  tutorHelpers.updateAssignmentMark(req.session.currentStudentId, req.body.id, req.body.mark).then(()=>{
+    res.json({status:true})
   })
 })
 

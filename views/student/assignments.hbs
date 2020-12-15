@@ -56,8 +56,10 @@
                                     <th>Topic</th>
 
                                     <th>File</th>
+                                    
+                                    <th>Date</th>
                                     <th>Time</th>
-                                    <th>last Date</th>
+                                    <th>Mark</th>
                                     {{!-- <th>Status</th> --}}
 
                                 </tr>
@@ -71,18 +73,22 @@
                                     <td>{{file}}</td>
                                     <td>{{date}}</td>
                                     <td>{{time}}</td>
-                                    {{#if isSubmitted}}
+                                    
+                                    {{#if submitted}}
+                                    <td>{{mark}}</td>
                                     <td><button type="button"
-                                            class="btn-fill-lmd radius-30 text-light shadow-dark-pastel-red bg-dark-pastel-red">Pending</button>
+                                            class="btn-fill-lmd radius-30 text-light shadow-dark-pastel-green bg-dark-pastel-green">Submitted</button>
                                     </td>
                                     {{else}}
+                                    
                                     <td><button type="button"
                                             class="btn-fill-lmd radius-30 text-light shadow-dark-pastel-red bg-dark-pastel-red">Pending</button>
                                     </td>
-                                    {{/if}}
                                     <td><a type="button" href="/assignment/{{_id}}"
                                             class="btn-fill-lmd radius-30 text-light shadow-dark-pastel-green bg-dark-pastel-green">view</a>
                                     </td>
+                                    {{/if}}
+                                    
 
 
                                 </tr>

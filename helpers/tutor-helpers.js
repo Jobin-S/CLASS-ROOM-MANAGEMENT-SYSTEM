@@ -2,6 +2,7 @@ const bcrypt = require('bcrypt')
 const { response } = require('../app')
 const db = require('../config/database')
 const collection = require('../config/collection')
+const { Logger } = require('mongodb')
 const objectId = require('mongodb').ObjectID
 
 module.exports = {
@@ -206,7 +207,8 @@ module.exports = {
                     student.assignments[i].date = `${dt[1]} ${dt[2]} ${dt[3]}`
                     student.assignments[i].time = dt[4]
                   }
-                
+                console.log(student)
+                resolve(student.assignments)
                 
             })
         })
@@ -220,6 +222,24 @@ module.exports = {
                 let assignment = student.assignments.find(x => x.id === id)
                 console.log(assignment);
                 resolve(assignment)
+            })
+        })
+        
+    },
+    updateAssignmentMark:(studentId, id, mark)=>{
+        mark = parseInt(mark)
+        console.log(studentId);
+        return new Promise((resolve, reject) => {
+            db.get().collection(collection.STUDENT_COLLECTION)
+            .updateOne(
+                {_id:objectId(studentId), "assignments.id":id},
+                {
+                    $set:{
+                        'assignments.$.mark':mark
+                    }
+                }
+            ).then((response)=>{
+                resolve()
             })
         })
         
