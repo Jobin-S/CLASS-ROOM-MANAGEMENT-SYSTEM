@@ -1,0 +1,97 @@
+<div class="dashboard-content-one">
+    <!-- Breadcubs Area Start Here -->
+    <div class="breadcrumbs-area">
+        <h3>{{title}}</h3>
+        <ul>
+            <li>
+                <a href="/dashboard">Dashboard</a>
+            </li>
+            <li>{{title}}</li>
+        </ul>
+    </div>
+    <!-- Breadcubs Area End Here -->
+    <!-- Class Table Area Start Here -->
+    <div class="card height-auto col-md-12">
+        <div class="card-body">
+
+
+            <div class="table-responsive">
+                <table class="table display data-table text-nowrap">
+                    <thead>
+                        <tr>
+                            <th>No.</th>
+                            <th>Topic</th>                            
+                            <th>Video Link</th>
+                            <th>Date</th>
+                            <th>Time</th>
+                            <th>Status</th>
+                            <th></th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#each notes}}
+                        <tr>
+                            <td>{{@key}}</td>
+                            <td>{{topic}}</td>
+                            <td>{{youtubeLink}}</td>
+                            <td>{{date}}</td>
+                            <td>{{time}}</td>
+                            <td><button type="button"
+                                    class="btn-fill-lmd radius-30 text-light shadow-dark-pastel-green bg-dark-pastel-green">view</button>
+                            </td>
+                            <td><button type="button" onclick="deleteNote('{{_id}}')"
+                                    class="btn-fill-lmd radius-30 text-light shadow-dark-pastel-red bg-dark-pastel-red">Delete</button>
+                            </td>
+
+                        </tr>
+                        {{/each}}
+
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <!-- Class Table Area End Here -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.12.0/dist/sweetalert2.all.min.js"></script>
+
+    <script>
+        let deleteNote = function (id) {
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: '/tutor/note/delete/' + id,
+                        method: 'post',
+                        success: (response) => {
+                            if (response.status) {
+                                Swal.fire(
+                                    'Deleted!',
+                                    'Your file has been deleted.',
+                                    'success'
+                                )
+                                location.reload()
+                            } else {
+                                Swal.fire({
+                                    title:'something went wrong!!',
+                                    icon:'warning',
+                                    text:'try again later..'
+                                })
+                                location.reload()
+                                
+                            }
+                        }
+                    })
+
+                }
+            })
+        }
+    </script>

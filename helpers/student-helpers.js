@@ -125,7 +125,7 @@ module.exports = {
         db.get().collection(collection.ASSIGNMENT_COLLECTION)
         .findOne({_id:objectId(id)}).then((assignment)=>{
           resolve(assignment)
-        })
+        })  
       })
       
     },
@@ -157,7 +157,69 @@ module.exports = {
         })
       })
       
-    }
-       
-}
+    },
+    getAllNotes:(phone)=>{
+      return new Promise((resolve, reject) => {
+          db.get().collection(collection.NOTE_COLLECTION)
+          .find().toArray().then(async(notes)=>{
+              for (var i in notes) {
+                  let dt = notes[i].dateTime.trim().split(" ");
+                  notes[i].date = `${dt[1]} ${dt[2]} ${dt[3]}`
+                  notes[i].time = dt[4]
+                }
+              let student = await db.get().collection(collection.STUDENT_COLLECTION).findOne({phone:phone})
+              console.log(student);
 
+              console.log(notes);
+
+                for(var i in student.notes){
+                  let studentNoteId = student.notes[i].noteId
+                  for (var j in notes){
+                    if(notes[j]._id  == studentNoteId){
+                      notes[j].marked = true
+                    }
+                  }
+                }
+                console.log(notes);
+              resolve(notes.reverse())
+          })
+      })
+      
+  },
+  getOneNote:(id)=>{
+    return new Promise((resolve, reject) => {
+      db.get().collection(collection.NOTE_COLLECTION)
+      .findOne({_id:objectId(id)}).then((note)=>{
+        let ytLink= note.youtubeLink
+        note.youtubeLinkCode = ytLink.split('youtu.be/')[1]
+        resolve(note)
+      })
+    })
+    
+  },
+  markAttendance:(studentId, noteId)=>{
+    return new Promise(async(resolve, reject) => {
+      let student = await db.get().collection(collection.STUDENT_COLLECTION).findOne({_id:objectId(studentId)})
+      console.log(student.notes);
+      let noteSeened = student.notes.find(x => x.noteId === noteId)
+      console.log(noteSeened);
+      
+      if(noteSeened){
+        reject()
+      }else{
+        db.get().collection(collection.STUDENT_COLLECTION)
+          .updateOne(
+            {_id:objectId(studentId)},
+            {
+              $push:{notes:{
+              dateTime:Date(Date.now()),
+              noteId:noteId
+            }}
+          }).then(()=>{
+            resolve()
+          })
+      }
+          
+        }
+)}
+}

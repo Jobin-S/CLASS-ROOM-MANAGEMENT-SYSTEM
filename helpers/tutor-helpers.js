@@ -100,6 +100,7 @@ module.exports = {
     studentRegister:(details)=>{
         return new Promise((resolve, reject) => {
             details.assignments = []
+            details.notes = []
             db.get().collection(collection.STUDENT_COLLECTION).insertOne(details).then(()=>{
                 resolve()
             })
@@ -239,6 +240,45 @@ module.exports = {
                     }
                 }
             ).then((response)=>{
+                resolve()
+            })
+        })
+        
+    },
+    addNote:(details, pdfName, VideoName)=>{
+        return new Promise((resolve, reject) => {
+            db.get().collection(collection.NOTE_COLLECTION)
+            .insertOne({
+                topic:details.topic,
+                video:VideoName,
+                pdf:pdfName,
+                youtubeLink:details.ytlink,
+                dateTime:Date(Date.now()),
+            }).then(()=>{
+                resolve()
+            })
+        })
+        
+    },
+    getAllNotes:()=>{
+        return new Promise((resolve, reject) => {
+            db.get().collection(collection.NOTE_COLLECTION)
+            .find().toArray().then((notes)=>{
+                for (var i in notes) {
+                    let dt = notes[i].dateTime.trim().split(" ");
+                    notes[i].date = `${dt[1]} ${dt[2]} ${dt[3]}`
+                    notes[i].time = dt[4]
+                
+                  }
+                resolve(notes)
+            })
+        })
+        
+    },
+    deleteNote:(id)=>{
+        return new Promise((resolve, reject) => {
+            db.get().collection(collection.NOTE_COLLECTION)
+            .deleteOne({_id:objectId(id)}).then(()=>{
                 resolve()
             })
         })

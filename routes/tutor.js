@@ -24,9 +24,24 @@ const pdfStorage = multer.diskStorage({
   }
 })
 
+const noteStorage = multer.diskStorage({
+  destination:`${__dirname}/../public/uploads/notes/`,
+  filename:(req, file, cb)=>{
+    const fileName = `${Date.now()}${path.extname(file.originalname)}`
+    if(req.session.NoteFilePdf){
+      req.session.NoteFileVideo = fileName
+    }else{
+      req.session.NoteFilePdf = fileName
+    }
+    cb(null, fileName)
+  }
+})
+
 const uploadPdf = multer({storage:pdfStorage})
 
 const uploadImage = multer({storage}).single('photo')
+
+const uploadNote = multer({storage:noteStorage})
 
 const verifyLogin = (req, res, next)=>{
   req.session.previousPath = false
@@ -307,7 +322,7 @@ router.get('/all-students/:id', verifyLogin,async (req, res)=>{
   let assignments = await tutorHelpers.getSingleStudentAssignment(req.params.id)
   req.session.currentStudentId = req.params.id
   let student = await tutorHelpers.getOneStudent(req.params.id)
-  res.render('student/single-student-details',{
+  res.render('tutor/single-student-details',{
     title:'student',
     tutor:req.session.tutor,
     assignments,
@@ -326,7 +341,7 @@ router.get('/assignment/:id', verifyLogin, async (req, res)=>{
   let student = await tutorHelpers.getOneStudent(req.session.currentStudentId)
   console.log(student);
   if(!assignment) res.redirect('/tutor/dashboard')
-  res.render('student/assignment-by-student',{
+  res.render('tutor/assignment-by-student',{
     tutor:req.session.tutor,
     assignment,
     tutorName,
@@ -340,6 +355,48 @@ router.post('/assignment-mark', (req, res)=>{
   console.log('api callllll');
   console.log(req.body);
   tutorHelpers.updateAssignmentMark(req.session.currentStudentId, req.body.id, req.body.mark).then(()=>{
+    res.json({status:true})
+  })
+})
+
+router.get('/notes', verifyLogin ,async (req, res)=>{
+
+  let tutorName = await tutorHelpers.getTutorName(req.session.tutor.email)
+  let image = await tutorHelpers.getProfilePic(req.session.tutor.email)
+  let notes = await tutorHelpers.getAllNotes()
+  res.render('tutor/all-notes',{
+    title:'All notes',
+    tutor:req.session.tutor,
+    tutorName,
+    profilePic:image,
+    notes
+  })
+})
+
+router.get('/add-note', verifyLogin ,async (req, res)=>{
+
+  let tutorName = await tutorHelpers.getTutorName(req.session.tutor.email)
+  let image = await tutorHelpers.getProfilePic(req.session.tutor.email)
+  res.render('tutor/add-note',{
+    title:'Add note',
+    tutor:req.session.tutor,
+    tutorName,
+    profilePic:image
+  })
+})
+
+router.post('/add-note', uploadNote.fields([{name:'pdf', maxCount:1},{name:"video", maxCount:1}]), (req, res)=>{
+  console.log('video uploaded');
+  console.log(req.session.NoteFilePdf);
+  console.log(req.session.NoteFileVideo);
+  tutorHelpers.addNote(req.body, req.session.NoteFilePdf, req.session.NoteFileVideo).then(()=>{
+    res.redirect('/tutor/notes')
+  })
+
+})
+
+router.post('/note/delete/:id', (req, res)=>{
+  tutorHelpers.deleteNote(req.params.id).then(()=>{
     res.json({status:true})
   })
 })

@@ -145,10 +145,13 @@ let assignments = await studentHelpers.getAllAssignments(req.session.student._id
   })
 })
 
-router.get('/notes', verifyLogin, (req, res)=>{
+router.get('/notes', verifyLogin,async (req, res)=>{
+  let notes = await studentHelpers.getAllNotes(req.session.student.phone)
+
   res.render('student/notes',{
     title:'Notes',
-    student:req.session.student
+    student:req.session.student,
+    notes
   })
 })
 
@@ -165,7 +168,7 @@ router.post('/assignment/submit/:id', submitAssignment.single('pdf') ,(req, res)
   let filename = req.session.studentAssignmentSubmitted
   studentHelpers.submitAssignments(req.body, req.session.student.phone, filename, req.params.id).then(()=>{
     req.session.studentAssignmentSubmitted = null
-    res.redirect('/tutor/assignments')
+    res.redirect('/assignments')
   })
 })
 
@@ -194,6 +197,26 @@ router.post('/otp-login', (req, res)=>{
   })
 })
 
+router.get('/note/:id', verifyLogin,async (req, res)=>{
+  let note = await studentHelpers.getOneNote(req.params.id)
+
+  res.render('student/single-note',{
+    title:note.topic,
+    note,
+    student:req.session.student
+  })
+})
+
+router.post('/mark-attendance/:id', (req, res)=>{
+  studentHelpers.markAttendance(req.session.student._id, req.params.id)
+  .then(()=>{
+    res.json({status:true})
+  })
+  .catch(()=>{
+    console.log('rejected');
+    res.json({status:false})
+  })
+})
 
 
 module.exports = router;

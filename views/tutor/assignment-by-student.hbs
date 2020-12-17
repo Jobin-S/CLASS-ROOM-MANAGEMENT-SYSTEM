@@ -1,0 +1,75 @@
+<div class="dashboard-content-one">
+    <!-- Breadcubs Area Start Here -->
+    <div class="breadcrumbs-area">
+        <h3>{{title}}</h3>
+        <ul>
+            <li>
+                <a href="/assignments">Assignments</a>
+            </li>
+            <li>{{assignment.topic}}</li>
+        </ul>
+    </div>
+
+    <!-- Add Class Area End Here -->
+    <div class="card height-auto col-md-12">
+        <div class="card-body">
+            <div class="heading-layout1">
+                <div class="item-title">
+                    <h3>Mark</h3>
+                </div>
+
+            </div>
+            <div class="row">
+                <div class="col-xl-3 col-lg-6 col-12 form-group">
+                    <label>Mark</label>
+                    <input type="text" onchange="submitMark('{{assignment.id}}')" id="mark-{{assignment.id}}"
+                        class="form-control" value="{{assignment.mark}}" placeholder='mark'>
+                </div>
+
+            </div>
+
+        </div>
+        <div class="card-body text-center">
+            <h2 class="mt-3">Assignment - <span class="text-danger">{{assignment.topic}}</span> </h2>
+
+            <div>
+                <embed src="/pdf/students/assignments/{{assignment.file}}" width="100%" id="pdf" height="1000px" />
+            </div>
+        </div>
+    </div>
+    <script src="/js/jquery-3.3.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.12.0/dist/sweetalert2.all.min.js"></script>
+    
+    <script>
+        let submitMark = function (id) {
+            let mark = document.getElementById('mark-' + id).value;
+            console.log('mark submit function called, marks : ' + mark)
+            $.ajax({
+                url: '/tutor/assignment-mark',
+                method: 'post',
+                data: {
+                    id: id,
+                    mark: mark
+                },
+                success: (response) => {
+                    if (response.status) console.log('mark updated')
+                    const Toast = Swal.mixin({
+                        toast: true,
+                        position: 'top-end',
+                        showConfirmButton: false,
+                        timer: 3000,
+                        timerProgressBar: true,
+                        didOpen: (toast) => {
+                            toast.addEventListener('mouseenter', Swal.stopTimer)
+                            toast.addEventListener('mouseleave', Swal.resumeTimer)
+                        }
+                    })
+
+                    Toast.fire({
+                        icon: 'success',
+                        title: 'Mark submitted'
+                    })
+                }
+            })
+        }
+    </script>
