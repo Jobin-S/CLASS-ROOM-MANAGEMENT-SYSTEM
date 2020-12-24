@@ -1,0 +1,43 @@
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css"><style>
+    body{
+        background-color: white;
+    }
+</style>
+<form>
+    <input id="myFile" name="myFile" type="file">
+</form>
+<button  onclick="submit()">Submit</button>
+<div class="w3-light-grey">
+  <div class="w3-green" id="progress" style="height:24px;width:0%"></div>
+</div>
+<script>
+    var submit = function () {
+        var formData = new FormData();
+        var file = document.getElementById('myFile').files[0];
+        formData.append('myFile', file);
+        var xhr = new XMLHttpRequest();
+        let progress = document.getElementById('progress')
+
+        // your url upload
+        xhr.open('post', '/tutor/test-progress', true);
+
+        xhr.upload.onprogress = function (e) {
+            if (e.lengthComputable) {
+                var percentage = (e.loaded / e.total) * 100;
+                console.log(percentage + "%");
+                progress.style.width = percentage+'%'
+                if(percentage == 100) alert('uploaded   ')
+            }
+        };
+
+        xhr.onerror = function (e) {
+            console.log('Error');
+            console.log(e);
+        };
+        xhr.onload = function () {
+            console.log(this.statusText);
+        };
+
+        xhr.send(formData);
+    }
+</script>

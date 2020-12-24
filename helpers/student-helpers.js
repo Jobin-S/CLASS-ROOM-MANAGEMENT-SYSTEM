@@ -1,11 +1,12 @@
 const db = require('../config/database')
 const collection = require('../config/collection')
-const { post } = require('../app')
+const { post, removeListener } = require('../app')
 const objectId = require('mongodb').ObjectID
 require('dotenv').config()
 var unirest = require('unirest');
 const bcrypt = require('bcrypt')
 const { v4: uuidv4 } = require('uuid')
+const { ObjectID } = require('mongodb')
 
 module.exports = {
     sendOtp:(phone)=>{
@@ -141,6 +142,7 @@ module.exports = {
     },
     submitAssignments:(details,phoneNum, fileName,  Id)=>{
       return new Promise((resolve, reject) => {
+        
         db.get().collection(collection.STUDENT_COLLECTION)
         .updateOne(
           {phone:phoneNum},
@@ -203,7 +205,10 @@ module.exports = {
       console.log(student.notes);
       let noteSeened = student.notes.find(x => x.noteId === noteId)
       console.log(noteSeened);
-      
+      let dt = Date(Date.now()).trim().split(" ");
+        let date = dt[2]
+        let month = dt[1]
+        let year = dt[3]
       if(noteSeened){
         reject()
       }else{
@@ -213,6 +218,9 @@ module.exports = {
             {
               $push:{notes:{
               dateTime:Date(Date.now()),
+              date:date,
+              month:month,
+              year:year,
               noteId:noteId
             }}
           }).then(()=>{
@@ -221,5 +229,58 @@ module.exports = {
       }
           
         }
-)}
+        )
+  },
+  verifyAttendance:(userId)=>{
+    return new Promise((resolve, reject) => {
+      let dt = new Date()
+      const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
+        "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+        let date = dt.getDate().toString()
+        let month = monthNames[dt.getMonth()]
+        let year = dt.getFullYear().toString()
+        let dateDashboard = date + " " + month + " " +year
+        console.log(date, year, month);
+      db.get().collection(collection.STUDENT_COLLECTION).aggregate([
+        {$match:{_id:ObjectID(userId), 'notes.date':date, 'notes.month':month, 'notes.year':year}}
+      ]).toArray().then((student)=>{
+        console.log(student);
+        if(!student){
+          resolve({attendance:false, date :dateDashboard})
+        }else{
+          resolve({attendance:true, date :dateDashboard})
+        }
+      })
+    })
+    
+  },
+  getAnnouncements:()=>{
+    return new Promise((resolve, reject) => {
+        db.get().collection(collection.ANNOUNCEMENT_COLLECTION)
+        .find().toArray().then((announcements)=>{
+            for(var i in announcements){
+                let date = announcements[i].dateTime.getDate()
+                const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
+    "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+                let month = monthNames[announcements[i].dateTime.getMonth()]
+                let year = announcements[i].dateTime.getFullYear()
+                announcements[i].date = date + " " + month + ' ' + year
+
+                console.log(date,month, year);
+            }
+            
+            resolve(announcements.reverse())
+        })
+    })
+    
+},
+getSingleAnnouncement:(id)=>{
+  return new Promise((resolve, reject) => {
+    db.get().collection(collection.ANNOUNCEMENT_COLLECTION)
+  .findOne({_id:ObjectID(id)}).then((announcement)=>{
+    resolve(announcement)
+  })
+  })
+  
+}
 }

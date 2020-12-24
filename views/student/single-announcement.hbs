@@ -1,0 +1,58 @@
+<div class="dashboard-content-one">
+    <!-- Breadcubs Area Start Here -->
+    <div class="breadcrumbs-area">
+        <h3>{{title}}</h3>
+        <ul>
+            <li>
+                <a href="/">Dashboard</a>
+            </li>
+            <li>{{announcement.title}}</li>
+        </ul>
+    </div>
+
+    <div class="card height-auto">
+        <div class="card-body">
+            <div class="heading-layout1">
+                <div class="item-title text-center">
+                    <h3 class="text-danger mt-2">{{announcement.title}} </h3><br>
+                    <h5 class="m-5">{{announcement.description}}</h5>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <ul id="tabs" class="nav nav-tabs">
+                    <li class="nav-item"><a href="" data-target="#home1" data-toggle="tab"
+                            class="nav-link small text-uppercase active">Video</a></li>
+                    <li class="nav-item"><a href="" data-target="#profile1" data-toggle="tab"
+                            class="nav-link small text-uppercase ">Image</a></li>
+                    <li class="nav-item"><a href="" data-target="#messages1" data-toggle="tab"
+                            class="nav-link small text-uppercase">Pdf</a></li>
+                </ul>
+                <br>
+                <div id="tabsContent" class="tab-content">
+                    <div id="home1" class="tab-pane fade active show">
+                        <video id="my-video" class="video-js" controls preload="auto" width="640" height="264"
+                            data-setup="{}">
+                            <source src="/uploads/announcment/{{announcement.video}}" type="video/mp4" />
+                            {{!-- <source src="MY_VIDEO.webm" type="video/webm" /> --}}
+                            <p class="vjs-no-js">
+                                To view this video please enable JavaScript, and consider upgrading to a
+                                web browser that
+                                <a href="https://videojs.com/html5-video-support/" target="_blank">supports HTML5
+                                    video</a>
+                            </p>
+                        </video>
+                    </div>
+                    <div id="profile1" class="tab-pane fade col-md-12">
+                        <div class="row pb-2">
+                            <img width="560" height="315"
+                                src="/uploads/announcment/{{announcement.imgFile}}"  height="600" width="1000">
+                        </div>
+                    </div>
+                    <div id="messages1" class="tab-pane fade ">
+                        <iframe src="/uploads/announcment/{{announcement.pdf}}" width="1000" height='600' frameborder="0"></iframe>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://vjs.zencdn.net/7.10.2/video.min.js"></script>

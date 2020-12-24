@@ -1,0 +1,195 @@
+<div class="dashboard-content-one">
+    <!-- Breadcubs Area Start Here -->
+    <div class="breadcrumbs-area">
+        <h3>{{title}}</h3>
+        <ul>
+            <li>
+                <a href="/tutor/dashboard">Dashboard</a>
+            </li>
+            <li>{{title}}</li>
+        </ul>
+    </div>
+    <!-- Breadcubs Area End Here -->
+    <div class="row">
+        <!-- Add Notice Area Start Here -->
+        <div class="col-4-xxxl col-12">
+            <div class="card height-auto">
+                <div class="card-body">
+                    <div class="heading-layout1">
+                        <div class="item-title">
+                            <h3>{{title}}</h3>
+                        </div>
+                        <div class="dropdown">
+                            <a class="dropdown-toggle" href="#" role="button" data-toggle="dropdown"
+                                aria-expanded="false">...</a>
+
+                            <div class="dropdown-menu dropdown-menu-right">
+                                <a class="dropdown-item" href="#"><i class="fas fa-times text-orange-red"></i>Close</a>
+                                <a class="dropdown-item" href="#"><i
+                                        class="fas fa-cogs text-dark-pastel-green"></i>Edit</a>
+                                <a class="dropdown-item" href="#"><i
+                                        class="fas fa-redo-alt text-orange-peel"></i>Refresh</a>
+                            </div>
+                        </div>
+                    </div>
+                    <form class="new-added-form">
+                        <div class="row">
+                            <div class="col-12-xxxl col-lg-6 col-12 form-group">
+                                <label>Title</label>
+                                <input type="text" name="title" id="title" placeholder="" class="form-control">
+                            </div>
+                            <div class="col-12-xxxl col-lg-6 col-12 form-group">
+                                <label>Description</label>
+                                <input type="text" name="description" id="description" placeholder=""
+                                    class="form-control">
+                            </div>
+                            <div class="col-xl-3 col-lg-6 col-12 form-group">
+                                <label>Pdf File</label>
+                                <input type="file" name="pdf" id="pdf" placeholder="" accept="application/pdf"
+                                    class="form-control">
+                            </div>
+                            <div class="col-xl-3 col-lg-6 col-12 form-group">
+                                <label>Image</label>
+                                <input type="file" name="img" id="img" placeholder="" accept="image/*"
+                                    class="form-control">
+                            </div>
+                            <div class="col-xl-3 col-lg-6 col-12 form-group">
+                                <label>Video</label>
+                                <input type="file" name="video" id="video" placeholder="" accept="video/*"
+                                    class="form-control">
+                            </div>
+                            <div class="progress-outer text-center col-md-10" id="progressContainer"
+                                style="display: none;">
+                                <div class="progress">
+                                    <div class="progress-bar progress-bar-striped progress-bar-info" id="progress"
+                                        style="width:0;">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-12 form-group mg-t-8">
+
+                                <button type="reset" class="btn-fill-lg bg-blue-dark btn-hover-yellow">Reset</button>
+                                <a onclick="submit()"
+                                    class="btn-fill-lg btn-gradient-yellow btn-hover-bluedark">Save</a>
+                            </div>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Add Notice Area End Here -->
+    <!-- All Notice Area Start Here -->
+    <div class="col-8-xxxl col-12">
+        <div class="card height-auto">
+            <div class="card-body">
+                <div class="heading-layout1">
+                    <div class="item-title">
+                        <h3>{{title}}</h3>
+                    </div>
+                    <div class="dropdown">
+                        <a class="dropdown-toggle" href="#" role="button" data-toggle="dropdown"
+                            aria-expanded="false">...</a>
+
+                        <div class="dropdown-menu dropdown-menu-right">
+                            <a class="dropdown-item" href="#"><i class="fas fa-times text-orange-red"></i>Close</a>
+                            <a class="dropdown-item" href="#"><i class="fas fa-cogs text-dark-pastel-green"></i>Edit</a>
+                            <a class="dropdown-item" href="#"><i
+                                    class="fas fa-redo-alt text-orange-peel"></i>Refresh</a>
+                        </div>
+                    </div>
+                </div>
+                <form class="mg-b-20">
+                    <div class="row gutters-8">
+                        <div class="col-lg-5 col-12 form-group">
+                            <input type="text" placeholder="Search by Date ..." class="form-control">
+                        </div>
+                        <div class="col-lg-5 col-12 form-group">
+                            <input type="text" placeholder="Search by Title ..." class="form-control">
+                        </div>
+                        <div class="col-lg-2 col-12 form-group">
+                            <button type="submit" class="fw-btn-fill btn-gradient-yellow">SEARCH</button>
+                        </div>
+                    </div>
+                </form>
+                <div class="notice-board-wrap">
+                    {{#each announcements}}
+                    <div class="notice-list">
+                        <div class="post-date bg-pink">{{date}}</div>
+                        <h3 class="notice-title"><a href="#">{{title}}</a></h3>
+                        <h6 class="notice-title"><a href="#">{{description}}</a></h6>
+                    </div>
+                    {{/each}}
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- All Notice Area End Here -->
+</div>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.12.0/dist/sweetalert2.all.min.js"></script>
+<!-- Add Class Area End Here -->
+
+<script>
+    var submit = function () {
+        console.log('called')
+        let title = document.getElementById('title').value
+        let description = document.getElementById('description').value
+
+
+        var formData = new FormData();
+        var file = document.getElementById('pdf').files[0];
+        var img = document.getElementById('img').files[0];
+        var video = document.getElementById('video').files[0];
+
+        formData.append('pdf', file);
+        formData.append('title', title)
+        formData.append('description', description)
+        formData.append('video', video)
+        formData.append('img', img)
+
+
+
+        var xhr = new XMLHttpRequest();
+        let progress = document.getElementById('progress')
+        document.getElementById('progressContainer').style.display = 'block'
+
+        // your url upload
+        xhr.open('post', '/tutor/add-announcement', true);
+
+
+        xhr.upload.onprogress = function (e) {
+            if (e.lengthComputable) {
+                var percentage = (e.loaded / e.total) * 100;
+                console.log(percentage + "%");
+                progress.style.width = percentage + '%'
+                if (percentage == 100) {
+
+                    Swal.fire(
+                        'Uploaded!',
+                        'Announcement uploaded succesfully',
+                        'success'
+                    ).then(() => {
+                        
+                        location.href = '/tutor/announcement'
+                    })
+
+                }
+            }
+        };
+
+        xhr.onerror = function (e) {
+            console.log('Error');
+            console.log(e);
+        };
+        xhr.onload = function () {
+            console.log(this.statusText);
+        };
+
+        xhr.send(formData);
+
+
+    }
+
+
+</script>

@@ -7,6 +7,7 @@ var hbs = require('express-handlebars')
 var db = require('./config/database')
 var session = require('express-session')
 
+
 db.connect().then((error)=>{
   if (error) console.log(`Database connection Error: ${error}`);
   else console.log('Database connected succesfully');
@@ -30,6 +31,8 @@ app.engine('hbs', hbs( {
     allowProtoMethodsByDefault: true,
   }
 }))
+
+
 
 app.use(logger('dev'));
 app.use(express.json());

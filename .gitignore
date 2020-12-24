@@ -1,4 +1,8 @@
 node_modules/*
 public/uploads/tutor/*
 !public/uploads/tutor/defaultProfilePic.jpg
+public/uploads/notes/*
+public/uploads/announcment/*
+public/pdf/students/assignments/*
+public/pdf/tutor/assignments/*
 .env

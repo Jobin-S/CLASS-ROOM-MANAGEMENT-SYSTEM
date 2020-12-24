@@ -21,16 +21,21 @@ const verifyLogin = (req, res, next)=>{
     req.session.studentPreviousPath = req.path
     next()
   }else{
-    req.session.redirectTo = req.path
+    req.session.studentRedirectTo = req.path
     res.redirect('/login')
   }
 }
 
-router.get('/',verifyLogin, (req, res)=>{
+router.get('/',verifyLogin,async (req, res)=>{
+  let currentAttendance = await studentHelpers.verifyAttendance(req.session.student._id)
+  req.session.student.attendance = currentAttendance.attendance
+  req.session.student.currentDate = currentAttendance.date
+  let announcements = await studentHelpers.getAnnouncements()
   
     res.render('student/dashboard',{
       title:'students dashboard',
-      student: req.session.student
+      student: req.session.student,
+      announcements
     }) 
   
 })
@@ -85,7 +90,7 @@ router.get('/login',(req, res)=>{
       location = req.session.studentPreviousPath
       console.log('previous path');
     }else{
-      location = req.session.redirectTo ? req.session.redirectTo :'/'
+      location = req.session.studentRedirectTo ? req.session.studentRedirectTo :'/dashboard'
     }
     res.redirect(location)
   }else{
@@ -109,7 +114,9 @@ router.post('/login',(req, res)=>{
   })
 })
 
-router.get('/attendance',verifyLogin, (req, res)=>{
+router.get('/attendance',verifyLogin,async (req, res)=>{
+  let currentAttendance = await studentHelpers.verifyAttendance(req.session.student._id)
+  req.session.student.attendance = currentAttendance.attendance
   res.render('student/attendance',{
     title:'Attendance',
     student: req.session.student
@@ -122,14 +129,18 @@ router.get('/logout',(req, res)=>{
   res.redirect('/login')
 })
 
-router.get('/task', verifyLogin, (req, res)=>{
+router.get('/task', verifyLogin,async (req, res)=>{
+  let currentAttendance = await studentHelpers.verifyAttendance(req.session.student._id)
+  req.session.student.attendance = currentAttendance.attendance
   res.render('student/task',{
     student:req.session.student,
     title:"Today's Task"
   })
 })
 
-router.get('/profile', verifyLogin, (req, res)=>{
+router.get('/profile', verifyLogin,async (req, res)=>{
+  let currentAttendance = await studentHelpers.verifyAttendance(req.session.student._id)
+  req.session.student.attendance = currentAttendance.attendance
   res.render('student/profile',{
     student:req.session.student,
     title:'profile'
@@ -138,6 +149,8 @@ router.get('/profile', verifyLogin, (req, res)=>{
 
 router.get('/assignments', verifyLogin,async (req, res)=>{
 let assignments = await studentHelpers.getAllAssignments(req.session.student._id)
+let currentAttendance = await studentHelpers.verifyAttendance(req.session.student._id)
+  req.session.student.attendance = currentAttendance.attendance
   res.render('student/assignments',{
     title:'assignments',
     assignments:assignments,
@@ -147,6 +160,8 @@ let assignments = await studentHelpers.getAllAssignments(req.session.student._id
 
 router.get('/notes', verifyLogin,async (req, res)=>{
   let notes = await studentHelpers.getAllNotes(req.session.student.phone)
+  let currentAttendance = await studentHelpers.verifyAttendance(req.session.student._id)
+  req.session.student.attendance = currentAttendance.attendance
 
   res.render('student/notes',{
     title:'Notes',
@@ -157,6 +172,8 @@ router.get('/notes', verifyLogin,async (req, res)=>{
 
 router.get('/assignment/:id',verifyLogin, async(req, res)=>{
 let assignment = await studentHelpers.getSingleAssignment(req.params.id)
+let currentAttendance = await studentHelpers.verifyAttendance(req.session.student._id)
+  req.session.student.attendance = currentAttendance.attendance
   res.render('student/single-assignment',{
     title:'assignment',
     student:req.session.student,
@@ -199,6 +216,8 @@ router.post('/otp-login', (req, res)=>{
 
 router.get('/note/:id', verifyLogin,async (req, res)=>{
   let note = await studentHelpers.getOneNote(req.params.id)
+  let currentAttendance = await studentHelpers.verifyAttendance(req.session.student._id)
+  req.session.student.attendance = currentAttendance.attendance
 
   res.render('student/single-note',{
     title:note.topic,
@@ -215,6 +234,17 @@ router.post('/mark-attendance/:id', (req, res)=>{
   .catch(()=>{
     console.log('rejected');
     res.json({status:false})
+  })
+})
+
+router.get('/announcement/:id', verifyLogin,async (req, res)=>{
+  let announcement = await studentHelpers.getSingleAnnouncement(req.params.id)
+  
+  console.log(announcement);
+  res.render('student/single-announcement',{
+    student:req.session.student,
+    title:announcement.title,
+    announcement
   })
 })
 

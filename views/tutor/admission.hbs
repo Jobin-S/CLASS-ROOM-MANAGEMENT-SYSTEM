@@ -32,7 +32,7 @@
                     </div>
                 </div>
             </div>
-            <form class="new-added-form" id="admissionForm" method="POST" action="/tutor/admission">
+            <form class="new-added-form" enctype="multipart/form-data" id="admissionForm" method="POST" action="/tutor/admission">
                 <div class="row">
                     <div class="col-xl-3 col-lg-6 col-12 form-group">
                         <label>First Name *</label>
@@ -93,7 +93,7 @@
                     </div> --}}
                     <div class="col-lg-6 col-12 form-group mg-t-30">
                         <label class="text-dark-medium">Upload Student Photo (150px X 150px)</label>
-                        <input type="file" class="form-control-file">
+                        <input type="file" name="profile" class="form-control-file">
                     </div>
                     <div class="col-12 form-group mg-t-8">
                         <button type="submit" class="btn-fill-lg btn-gradient-yellow btn-hover-bluedark">Save</button>
@@ -120,6 +120,7 @@
     <script src="/js/jquery-3.3.1.min.js"></script>
 
     <script>
+        let cropData;
         let popUpUpload = async function () {
             const { value: file } = await swal.fire({
                 title: 'upload Image',
@@ -156,66 +157,28 @@
                     showLoaderOnConfirm: true,
                     allowOutsideClick: false,
                     preConfirm: () => {
-                        console.log('preconfirm')
-                        var imgurl = cropper.getCroppedCanvas().toDataURL();
-                        console.log('imgurl: ', imgurl)
-                        convertURIToImageData(imgurl).then(function (imageData) {
-                            // Here you can use imageData
-                            console.log(imageData);
-
-
-                            var img = document.createElement("img");
-                            img.src = imgurl;
-                            document.getElementById("cropped_result").appendChild(img);
-
-                            cropper.getCroppedCanvas().toBlob(function (blob) {
-                                let base64data;
-                                var reader = new FileReader();
-                                reader.readAsDataURL(blob);
-                                reader.onloadend = function () {
-                                    base64data = reader.result;
-                                    console.log('base64: ', base64data);
-                                }
-                                var formData = new FormData(admissionForm);
-                                formData.append('croppedImage', blob);
-                                //console.log(formData)
-                                //                            console.log(blob)
-
-                                // Use `jQuery.ajax` method
-                                console.log('ajax')
-                                $.ajax({
-                                    url: '/tutor/upload-studentImg',
-                                    processData: false,
-                                    contentType: 'application/octet-stream',
-                                    method: 'post',
-                                    data: formData,
-                                    success: (res) => {
-                                        console.log(res)
-                                    }
-                                })
-                            })
+                        var imgurl = cropper.getCroppedCanvas().toDataURL()
+                        console.log(imgurl)
+                        Swal.fire({
+                            title: 'Cropped!',
+                            text: 'Student Profile Picture',
+                            imageUrl: imgurl,
+                            imageWidth: 400,
+                            imageHeight: 400,
+                            imageAlt: 'Cropped Image',
                         })
+                        var img = document.createElement("img");
+                        img.src = imgurl;
+                        document.getElementById("cropped_result").appendChild(img);
+                        console.log(cropData)
                     }
                 })
             }
         }
 
 
-        function convertURIToImageData(URI) {
-            return new Promise(function (resolve, reject) {
-                if (URI == null) return reject();
-                var canvas = document.createElement('canvas'),
-                    context = canvas.getContext('2d'),
-                    image = new Image();
-                image.addEventListener('load', function () {
-                    canvas.width = image.width;
-                    canvas.height = image.height;
-                    context.drawImage(image, 0, 0, canvas.width, canvas.height);
-                    resolve(context.getImageData(0, 0, canvas.width, canvas.height));
-                }, false);
-                image.src = URI;
-            });
-        }
+
+
 
 
 
@@ -229,7 +192,7 @@
                 dragMode: 'move',
                 allowOutsideClick: false,
                 crop: function (e) {
-                    console.log(e.detail.x);
+                    cropData = e.detail
                     console.log(e.detail.y);
                 }
             });

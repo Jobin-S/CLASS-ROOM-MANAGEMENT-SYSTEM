@@ -5,6 +5,9 @@ var sidebarToggle = require('../controller/sidebar-toggler').toggler
 var path = require('path')
 const multer = require('multer')
 
+
+
+
 const storage = multer.diskStorage({
   destination:`${__dirname}/../public/uploads/tutor/`,
   filename:(req, file, cb)=>{
@@ -37,11 +40,21 @@ const noteStorage = multer.diskStorage({
   }
 })
 
+const announcementStorage = multer.diskStorage({
+  destination:`${__dirname}/../public/uploads/announcment/`,
+  filename:(req, file, cb)=>{
+    let fileName = `${Date.now()}${path.extname(file.originalname)}`
+    cb(null, fileName)
+  }
+})
+
 const uploadPdf = multer({storage:pdfStorage})
 
 const uploadImage = multer({storage}).single('photo')
 
 const uploadNote = multer({storage:noteStorage})
+
+const UploadAnnouncement = multer({storage:announcementStorage})
 
 const verifyLogin = (req, res, next)=>{
   req.session.previousPath = false
@@ -49,7 +62,7 @@ const verifyLogin = (req, res, next)=>{
     req.session.previousPath = req.path
     next()
   }else{
-    req.session.redirectTo = req.path
+    req.session.tutorRedirectTo = req.path
     res.redirect('/tutor/login')
   }
 }
@@ -59,11 +72,12 @@ const verifyLogin = (req, res, next)=>{
 router.get('/Dashboard',verifyLogin,async function(req, res, next) {
   let tutorName = await tutorHelpers.getTutorName(req.session.tutor.email)
   let image = await tutorHelpers.getProfilePic(req.session.tutor.email)
+  let announcements = await tutorHelpers.getAnnouncements()
 
   res.render('tutor/dashboard',{
   title:"Tutor Dashboard", 
   profilePic:image,
-
+  announcements,
   tutor:true, 
   tutorName:tutorName,
   dashboard:sidebarToggle})
@@ -94,7 +108,7 @@ router.get('/admission',verifyLogin,async (req, res)=>{
   let tutorName = await tutorHelpers.getTutorName(req.session.tutor.email)
   let image = await tutorHelpers.getProfilePic(req.session.tutor.email)
   let newAdmissionNum = await tutorHelpers.getNewAdmissionNo()
-  
+
 
   res.render('tutor/admission', {
     title:'Student Admission Form',
@@ -108,30 +122,48 @@ router.get('/admission',verifyLogin,async (req, res)=>{
 })
 
 router.get('/attendance',verifyLogin,async (req, res)=>{
+  console.log(req.query.date)
   let tutorName = await tutorHelpers.getTutorName(req.session.tutor.email)
   let image = await tutorHelpers.getProfilePic(req.session.tutor.email)
-
+  let currentDate, attendanceData, reqDate = req.query.date;
+  if(!reqDate){
+    console.log('normal route');
+    let dt = new Date()
+    console.log(dt);
+    currentDate = dt.getDate()+'/'+dt.getMonth()+"/"+dt.getFullYear()
+    attendanceData = await tutorHelpers.getAllAttendance(currentDate)
+    attendanceData.current = currentDate
+    console.log('data');
+    console.log(attendanceData);
+  }else{
+    console.log('searched route');
+    attendanceData = await tutorHelpers.getAllAttendance(req.query.date)
+    attendanceData.current = req.query.date
+  }
+  
+  console.log(attendanceData.current);
   res.render('tutor/attendance',{
     title:'Attendance',
     tutor:true,
     profilePic:image,
     tutorName:tutorName,
-    attendance:sidebarToggle
+    attendance:sidebarToggle,
+    attendanceData
   })
 })
 
-router.get('/notice',verifyLogin,async (req, res)=>{
+router.get('/announcement',verifyLogin,async (req, res)=>{
   let tutorName = await tutorHelpers.getTutorName(req.session.tutor.email)
   let image = await tutorHelpers.getProfilePic(req.session.tutor.email)
+  let announcements = await tutorHelpers.getAnnouncements()
   
-
-  res.render('tutor/notice', {
-    title:'Notice Board',
+  res.render('tutor/announcement', {
+    title:'Announcement',
     tutor:true,
     tutorName:tutorName,
     profilePic:image,
-
-    notice:sidebarToggle
+    announcements,
+    announcement:sidebarToggle
   })
 })
 
@@ -187,7 +219,7 @@ router.get('/login', (req, res)=>{
       location = '/tutor'+req.session.previousPath
       console.log('previous path');
     }else{
-      location = req.session.redirectTo ? '/tutor'+req.session.redirectTo :'/tutor/dashboard'
+      location = req.session.tutorRedirectTo ? '/tutor'+req.session.tutorRedirectTo :'/tutor/dashboard'
     }
     res.redirect(location)
   }else{
@@ -201,13 +233,13 @@ router.post('/login', (req, res)=>{
     if (response.status){
       req.session.tutor = response.user
       req.session.tutorLoggedIn = true
-      console.log('req redirect',req.session.redirectTo);
+      console.log('req redirect',req.session.tutorRedirectTo);
       let location;
       if(req.session.previousPath){
-        location = '/tutor'+req.session.previousPath
+        location = '/tutor'+ req.session.previousPath === "" ? "/Dashboard" : req.session.previousPath
         console.log('previous path');
       }else{
-        location = req.session.redirectTo ? '/tutor'+req.session.redirectTo :'/tutor/dashboard'
+        location = req.session.tutorRedirectTo ? '/tutor'+req.session.tutorRedirectTo :'/tutor/dashboard'
       }
       console.log('location: '+location);
 
@@ -257,6 +289,13 @@ router.post('/editprofile-image', uploadImage, (req, res)=>{
 router.post('/admission', (req, res)=>{
   tutorHelpers.studentRegister(req.body).then(()=>{
     req.session.studentAdded = true
+    const sharp = require('sharp');
+    console.log(req.file)
+    sharp(req.file)
+    .extract({left: parseInt(324.86956521739125), top: parseInt(111.30434782608697), width: parseInt(1075.4782608695655), height: parseInt(1075.4782608695655)})
+    .toFile('public/uploads/tutor/output2.png')
+    .then( data => { console.log(data);})
+    .catch( err => {  console.log('error'); }); 
     tutorHelpers.increaseAdmissionNum().then(()=>{
       res.redirect('/tutor/all-students')
     })
@@ -303,10 +342,12 @@ router.post('/upload-studentImg',(req, res)=>{
 })
 
 router.post('/add-assignment', uploadPdf.single('pdf'), (req, res)=>{
+  console.log('called add assignment');
   let filename = req.session.TutorAssignmentAdded
+  console.log(req.body);
   tutorHelpers.addAssignments(req.body, filename).then(()=>{
     req.session.TutorAssignmentAdded = null
-    res.redirect('/tutor/assignments')
+    res.end()
   })
 })
 
@@ -390,7 +431,7 @@ router.post('/add-note', uploadNote.fields([{name:'pdf', maxCount:1},{name:"vide
   console.log(req.session.NoteFilePdf);
   console.log(req.session.NoteFileVideo);
   tutorHelpers.addNote(req.body, req.session.NoteFilePdf, req.session.NoteFileVideo).then(()=>{
-    res.redirect('/tutor/notes')
+    res.end()
   })
 
 })
@@ -401,4 +442,35 @@ router.post('/note/delete/:id', (req, res)=>{
   })
 })
 
+
+
+
+router.post('/add-announcement',UploadAnnouncement.fields([{name:'pdf', maxCount:1},{name:"video", maxCount:1},{name:"img", maxCount:1}]), (req, res)=>{
+
+  let pdf = req.files.pdf[0].filename
+  let video = req.files.video[0].filename
+  let image = req.files.img[0].filename
+  console.log(`Video:${video} ,img:${image} pdf: ${pdf}`);
+  console.log(req.body);
+  tutorHelpers.addAnnouncement(video, pdf, image, req.body).then(()=>{
+    res.end()
+  })
+
+
+})
+
+router.get('/announcement/:id', verifyLogin,async (req, res)=>{
+  let announcement = await tutorHelpers.getSingleAnnouncement(req.params.id)
+  let tutorName = await tutorHelpers.getTutorName(req.session.tutor.email)
+  let image = await tutorHelpers.getProfilePic(req.session.tutor.email)
+  
+  console.log(announcement);
+  res.render('tutor/single-announcement',{
+    tutor:req.session.tutor,
+    title:announcement.title,
+    announcement,
+    tutorName,
+    profilePic:image
+  })
+})
 module.exports = router;

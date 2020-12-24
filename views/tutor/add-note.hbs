@@ -28,32 +28,99 @@
                     </div>
                 </div>
             </div>
-            <form class="new-added-form" method="POST" action="/tutor/add-note" enctype="multipart/form-data"> 
+            <form class="new-added-form">
                 <div class="row">
                     <div class="col-xl-3 col-lg-6 col-12 form-group">
                         <label>Topic</label>
-                        <input type="text" name="topic" class="form-control">
+                        <input type="text" name="topic" id="topic" class="form-control">
                     </div>
                     <div class="col-xl-3 col-lg-6 col-12 form-group">
                         <label>Pdf File</label>
-                        <input type="file" name="pdf" placeholder="" accept="application/pdf" class="form-control">
+                        <input type="file" name="pdf" id="pdf" placeholder="" accept="application/pdf" class="form-control">
                     </div>
                     <div class="col-xl-3 col-lg-6 col-12 form-group">
                         <label>Video</label>
-                        <input type="file" name="video" placeholder="" accept="video/*" class="form-control">
+                        <input type="file" name="video" id="video" placeholder="" accept="video/*" class="form-control">
                     </div>
                     <div class="col-xl-3 col-lg-6 col-12 form-group">
                         <label>YouTube Video Link</label>
-                        <input type="text" name="ytlink" class="form-control">
-                    </div> 
-                   
-                    <div class="col-md-6 form-group"></div>
-                    <div class="col-12 form-group mg-t-8">
-                        <button type="submit" class="btn-fill-lg btn-gradient-yellow btn-hover-bluedark">Save</button>
-                        
+                        <input type="text" name="ytlink" id="ytlink" class="form-control">
                     </div>
+
+                    <div class="col-md-6 form-group"></div>
+                    
                 </div>
             </form>
+            <div class="progress-outer text-center col-md-10" id="progressContainer" style="display: none;">
+                <div class="progress">
+                    <div class="progress-bar progress-bar-striped progress-bar-info" id="progress" style="width:0;">
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 form-group mg-t-8">
+                <button onclick="submit()" class="btn-fill-lg btn-gradient-yellow btn-hover-bluedark">Save</button>
+
+            </div>
         </div>
     </div>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.12.0/dist/sweetalert2.all.min.js"></script>
     <!-- Add Class Area End Here -->
+
+    <script>
+        var submit = function () {
+            console.log('called')
+            let topic = document.getElementById('topic').value
+            let ytlink = document.getElementById('ytlink').value
+
+
+            var formData = new FormData();
+            var file = document.getElementById('pdf').files[0];
+            var video = document.getElementById('video').files[0];
+
+            formData.append('pdf', file);
+            formData.append('topic', topic)
+            formData.append('ytlink', ytlink)
+            formData.append('video', video)
+
+
+            var xhr = new XMLHttpRequest();
+            let progress = document.getElementById('progress')
+            document.getElementById('progressContainer').style.display = 'block'
+
+            // your url upload
+            xhr.open('post', '/tutor/add-note', true);
+
+
+            xhr.upload.onprogress = function (e) {
+                if (e.lengthComputable) {
+                    var percentage = (e.loaded / e.total) * 100;
+                    console.log(percentage + "%");
+                    progress.style.width = percentage + '%'
+                    if (percentage == 100) {
+
+                        Swal.fire(
+                            'Uploaded!',
+                            'Note uploaded succesfully',
+                            'success'
+                        ).then(() => {
+                            location.href = '/tutor/notes'
+                        })
+
+                    }
+                }
+            };
+
+            xhr.onerror = function (e) {
+                console.log('Error');
+                console.log(e);
+            };
+            xhr.onload = function () {
+                console.log(this.statusText);
+            };
+
+            xhr.send(formData);
+        }
+
+
+
+    </script>

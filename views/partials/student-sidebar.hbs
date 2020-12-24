@@ -42,6 +42,15 @@
                     </li>
                 </ul>
                 <ul class="navbar-nav">
+                    <li>
+                        <div>
+                            {{#if student.attendance}}
+                                <button class='btn-fill-lmd radius-30 text-light shadow-dark-pastel-green bg-dark-pastel-green mr-5'>present</button>
+                                {{else}}
+                                <button class='btn-fill-lmd radius-30 text-light shadow-dark-pastel-red bg-dark-pastel-red mr-5'>Absent</button>
+                            {{/if}}
+                        </div>
+                    </li>
                     <li class="navbar-item dropdown header-admin">
                         <a class="navbar-nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown"
                             aria-expanded="false">

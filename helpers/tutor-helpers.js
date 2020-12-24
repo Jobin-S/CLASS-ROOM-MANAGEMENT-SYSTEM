@@ -2,7 +2,7 @@ const bcrypt = require('bcrypt')
 const { response } = require('../app')
 const db = require('../config/database')
 const collection = require('../config/collection')
-const { Logger } = require('mongodb')
+const { Logger, ObjectID } = require('mongodb')
 const objectId = require('mongodb').ObjectID
 
 module.exports = {
@@ -283,5 +283,95 @@ module.exports = {
             })
         })
         
+    },
+    getAllAttendance:(details)=>{
+        console.log('details',details);
+        const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
+        "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+        let splitedDate = details.trim().split("/")
+        let date = splitedDate[0]
+        let month = monthNames[splitedDate[1]-1]
+        let year = splitedDate[2]
+        console.log(`date: ${date}, month: ${month}, year: ${year}`);
+        return new Promise(async(resolve, reject) => {
+            // let notes = await db.get().collection(collection.NOTE_COLLECTION).find().toArray()
+            // console.log(notes)
+            let students = await db.get().collection(collection.STUDENT_COLLECTION)
+            .aggregate([
+                {$match:{'notes.month':month, 'notes.date':date, 'notes.year':year}},
+                {$project:{'fname':1, 'notes':1}},
+                {$group:{   
+                    _id:{name:'$fname', attendance: '$notes'}
+                }},
+                {$sort:{'_id.name':1}}
+            ]).toArray()
+            console.log(students)    
+            resolve(students)
+            
+        })
+        
+    },
+    addAnnouncement:(videoFile = null, pdfFile= null, imgFile=null, details)=>{
+        return new Promise((resolve, reject) => {
+            db.get().collection(collection.ANNOUNCEMENT_COLLECTION)
+                .insertOne({
+                    title:details.title,
+                    description:details.description,
+                    pdf:pdfFile,
+                    imgFile:imgFile,
+                    video:videoFile,
+                    dateTime: new Date
+                }).then(()=>resolve())
+        })
+        
+    },
+    getAnnouncements:()=>{
+        return new Promise((resolve, reject) => {
+            db.get().collection(collection.ANNOUNCEMENT_COLLECTION)
+            .find().toArray().then((announcements)=>{
+                for(var i in announcements){
+                    let date = announcements[i].dateTime.getDate()
+                    const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
+        "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+                    let month = monthNames[announcements[i].dateTime.getMonth()]
+                    let year = announcements[i].dateTime.getFullYear()
+                    announcements[i].date = date + " " + month + ' ' + year
+
+                    console.log(date,month, year);
+                }
+                
+                resolve(announcements.reverse())
+            })
+        })
+        
+    },
+    getAnnouncements:()=>{
+        return new Promise((resolve, reject) => {
+            db.get().collection(collection.ANNOUNCEMENT_COLLECTION)
+            .find().toArray().then((announcements)=>{
+                for(var i in announcements){
+                    let date = announcements[i].dateTime.getDate()
+                    const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
+        "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+                    let month = monthNames[announcements[i].dateTime.getMonth()]
+                    let year = announcements[i].dateTime.getFullYear()
+                    announcements[i].date = date + " " + month + ' ' + year
+    
+                    console.log(date,month, year);
+                }
+                
+                resolve(announcements.reverse())
+            })
+        })
+        
+    },
+    getSingleAnnouncement:(id)=>{
+      return new Promise((resolve, reject) => {
+        db.get().collection(collection.ANNOUNCEMENT_COLLECTION)
+      .findOne({_id:ObjectID(id)}).then((announcement)=>{
+        resolve(announcement)
+      })
+      })
+      
     }
 }

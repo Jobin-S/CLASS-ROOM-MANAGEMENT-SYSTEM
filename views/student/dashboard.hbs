@@ -20,7 +20,7 @@
                             <i class="flaticon-calendar text-magenta"></i>
                         </div>
                         <div class="item-content">
-                            <div class="item-number"><span >15 Dec 2020</span></div>
+                            <div class="item-number"><span >{{student.currentDate}}</span></div>
                             <div class="item-title">Date</div>
                         </div>
                     </div>
@@ -31,7 +31,11 @@
                             <i class="flaticon-shopping-list text-blue"></i>
                         </div>
                         <div class="item-content">
-                            <div class="item-number"><span class="text-danger">Not marked</span></div>
+                            {{#if student.attendance}}
+                                <div class="item-number"><span class="text-success">marked</span></div>
+                            {{else}}
+                                <div class="item-number"><span class="text-danger">Not marked</span></div>
+                            {{/if}}
                             <div class="item-title">Attendence</div>
                         </div>
                     </div>
@@ -281,39 +285,13 @@
                         </div>
                     </div>
                     <div class="notice-box-wrap">
+                        {{#each announcements}}
                         <div class="notice-list">
-                            <div class="post-date bg-skyblue">16 June, 2019</div>
-                            <h6 class="notice-title"><a href="#">Great School manag mene esom tus eleifend lectus
-                                    sed maximus mi faucibusnting.</a></h6>
-                            <div class="entry-meta"> Jennyfar Lopez / <span>5 min ago</span></div>
+                            <div class="post-date bg-pink">{{date}}</div>
+                            <h3 class="notice-title"><a href="/announcement/{{_id}}">{{title}}</a></h3>
+                            <h6 class="notice-title"><a href="#">{{description}}</a></h6>
                         </div>
-                        <div class="notice-list">
-                            <div class="post-date bg-yellow">16 June, 2019</div>
-                            <h6 class="notice-title"><a href="#">Great School manag printing.</a></h6>
-                            <div class="entry-meta"> Jennyfar Lopez / <span>5 min ago</span></div>
-                        </div>
-                        <div class="notice-list">
-                            <div class="post-date bg-pink">16 June, 2019</div>
-                            <h6 class="notice-title"><a href="#">Great School manag Nulla rhoncus eleifensed mim
-                                    us mi faucibus id. Mauris vestibulum non purus lobortismenearea</a></h6>
-                            <div class="entry-meta"> Jennyfar Lopez / <span>5 min ago</span></div>
-                        </div>
-                        <div class="notice-list">
-                            <div class="post-date bg-skyblue">16 June, 2019</div>
-                            <h6 class="notice-title"><a href="#">Great School manag mene esom text of the printing.</a>
-                            </h6>
-                            <div class="entry-meta"> Jennyfar Lopez / <span>5 min ago</span></div>
-                        </div>
-                        <div class="notice-list">
-                            <div class="post-date bg-yellow">16 June, 2019</div>
-                            <h6 class="notice-title"><a href="#">Great School manag printing.</a></h6>
-                            <div class="entry-meta"> Jennyfar Lopez / <span>5 min ago</span></div>
-                        </div>
-                        <div class="notice-list">
-                            <div class="post-date bg-pink">16 June, 2019</div>
-                            <h6 class="notice-title"><a href="#">Great School manag meneesom.</a></h6>
-                            <div class="entry-meta"> Jennyfar Lopez / <span>5 min ago</span></div>
-                        </div>
+                        {{/each}}
                     </div>
                 </div>
             </div>

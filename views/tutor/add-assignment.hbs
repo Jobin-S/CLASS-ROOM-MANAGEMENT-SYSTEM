@@ -1,3 +1,34 @@
+<style>
+    .progress-outer{
+    background: #fff;
+    padding: 5px 60px 5px 5px;
+    border: 5px solid #bebfbf;
+    border-radius: 45px;
+    margin-bottom: 20px;
+    position: relative;
+}
+.progress{
+    background: #bebfbf;
+    border-radius: 20px;
+    margin: 0;
+}
+.progress .progress-bar{
+    border-radius: 20px;
+    box-shadow: none;
+    animation: animate-positive 2s;
+}
+.progress .progress-value{
+    font-size: 20px;
+    font-weight: 700;
+    color: #6b7880;
+    position: absolute;
+    top: 3px;
+    right: 10px;
+}
+@keyframes animate-positive{
+    0%{ width: 0; }
+}
+</style>
 <div class="dashboard-content-one">
     <!-- Breadcubs Area Start Here -->
     <div class="breadcrumbs-area">
@@ -28,24 +59,83 @@
                     </div>
                 </div>
             </div>
-            <form class="new-added-form" method="POST" action="/tutor/add-assignment" enctype="multipart/form-data"> 
+            <form class="new-added-form" id="form">
                 <div class="row">
                     <div class="col-xl-3 col-lg-6 col-12 form-group">
                         <label>Topic</label>
-                        <input type="text" placeholder="" name="topic" class="form-control">
+                        <input type="text" id="topic" placeholder="" name="topic" class="form-control">
                     </div>
                     <div class="col-xl-3 col-lg-6 col-12 form-group">
                         <label>File</label>
-                        <input type="file" name="pdf" placeholder="" class="form-control">
+                        <input type="file" name="pdf" id="pdf" placeholder="" class="form-control">
                     </div>
-                   
+
                     <div class="col-md-6 form-group"></div>
-                    <div class="col-12 form-group mg-t-8">
-                        <button type="submit" class="btn-fill-lg btn-gradient-yellow btn-hover-bluedark">Save</button>
-                        
-                    </div>
+
+
                 </div>
             </form>
+            <div class="progress-outer text-center col-md-10" id="progressContainer" style="display: none;">
+                <div class="progress">
+                    <div class="progress-bar progress-bar-striped progress-bar-info" id="progress" style="width:0;"></div>
+                </div>
+            </div>
+            <div class="col-12 form-group mg-t-8">
+                <button onclick="submit()" class="btn-fill-lg btn-gradient-yellow btn-hover-bluedark">Save</button>
+
+            </div>
         </div>
     </div>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.12.0/dist/sweetalert2.all.min.js"></script>
     <!-- Add Class Area End Here -->
+
+    <script>
+        var submit = function () {
+            console.log('called')
+            let topic = document.getElementById('topic').value
+
+            var formData = new FormData();
+            var file = document.getElementById('pdf').files[0];
+            formData.append('pdf', file);
+            formData.append('topic', topic)
+            var xhr = new XMLHttpRequest();
+            let progress = document.getElementById('progress')
+            document.getElementById('progressContainer').style.display = 'block'
+
+            // your url upload
+            xhr.open('post', '/tutor/add-assignment', true);
+
+
+            xhr.upload.onprogress = function (e) {
+                if (e.lengthComputable) {
+                    var percentage = (e.loaded / e.total) * 100;
+                    console.log(percentage + "%");
+                    progress.style.width = percentage + '%'
+                    if (percentage == 100) {
+
+                        Swal.fire(
+                            'Uploaded!',
+                            'Assignment uploaded succesfully',
+                            'success'
+                        ).then(() => {
+                            location.href = '/tutor/assignments'
+                        })
+
+                    }
+                }
+            };
+
+            xhr.onerror = function (e) {
+                console.log('Error');
+                console.log(e);
+            };
+            xhr.onload = function () {
+                console.log(this.statusText);
+            };
+
+            xhr.send(formData);
+        }
+
+         
+
+    </script>
