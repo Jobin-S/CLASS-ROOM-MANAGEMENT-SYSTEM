@@ -232,7 +232,7 @@ module.exports = {
         )
   },
   verifyAttendance:(userId)=>{
-    return new Promise((resolve, reject) => {
+    return new Promise(async(resolve, reject) => {
       let dt = new Date()
       const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
         "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
@@ -241,16 +241,22 @@ module.exports = {
         let year = dt.getFullYear().toString()
         let dateDashboard = date + " " + month + " " +year
         console.log(date, year, month);
-      db.get().collection(collection.STUDENT_COLLECTION).aggregate([
-        {$match:{_id:ObjectID(userId), 'notes.date':date, 'notes.month':month, 'notes.year':year}}
-      ]).toArray().then((student)=>{
-        console.log(student);
-        if(!student){
-          resolve({attendance:false, date :dateDashboard})
-        }else{
+      let student = await db.get().collection(collection.STUDENT_COLLECTION).aggregate([
+        {$match:{'_id':ObjectID(userId), 'notes.date':"26", 'notes.month':month, 'notes.year':year}}
+      ]).toArray()
+        console.log("student: "+student[0]);
+        if(student){
+          console.log('present: '+student);
+
           resolve({attendance:true, date :dateDashboard})
+        }else{
+          console.log('absent: '+student);
+
+          resolve({attendance:false, date :dateDashboard})
+
+
         }
-      })
+      
     })
     
   },
@@ -280,6 +286,46 @@ getSingleAnnouncement:(id)=>{
   .findOne({_id:ObjectID(id)}).then((announcement)=>{
     resolve(announcement)
   })
+  })
+  
+},
+getEvents:()=>{
+  return new Promise((resolve, reject) => {
+      db.get().collection(collection.EVENT_COLLECTION)
+      .find().toArray().then((events)=>{
+          for(var i in events){
+              let date = events[i].dateTime.getDate()
+              const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
+  "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+              let month = monthNames[events[i].dateTime.getMonth()]
+              let year = events[i].dateTime.getFullYear()
+              events[i].date = date + " " + month + ' ' + year
+
+              console.log(date,month, year);
+          }
+          
+          resolve(events.reverse())
+      })
+  })
+  
+},
+getSingleEvent:(id)=>{
+  return new Promise((resolve, reject) => {
+    db.get().collection(collection.EVENT_COLLECTION)
+  .findOne({_id:ObjectID(id)}).then((event)=>{
+    resolve(event)
+  })
+  })
+  
+},
+VerifyEventPurchase:(studentId, eventId)=>{
+  return new Promise(async(resolve, reject) => {
+    let order = await db.get().collection(collection.ORDER_COLLECTION)
+    .aggregate([
+      {$match:{'studentId':studentId, 'eventId':eventId}}
+    ]).toArray()
+      resolve(order[0]);
+    
   })
   
 }

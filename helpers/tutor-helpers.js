@@ -373,5 +373,44 @@ module.exports = {
       })
       })
       
+    },
+    addEvent:(videoFile, pdfFile, imgFile, details)=>{
+        return new Promise((resolve, reject) => {
+            details.price = parseInt(details.price)
+            let type = details.type == "true" ? true : false
+            db.get().collection(collection.EVENT_COLLECTION)
+                .insertOne({
+                    title:details.title,
+                    description:details.description,
+                    pdf:pdfFile,
+                    imgFile:imgFile,
+                    video:videoFile,
+                    isPaid:type,
+                    price:details.price,
+                    dateTime: new Date
+                    
+                }).then(()=>resolve())
+        })
+        
+    },
+    getEvents:()=>{
+        return new Promise((resolve, reject) => {
+            db.get().collection(collection.EVENT_COLLECTION)
+            .find().toArray().then((events)=>{
+                for(var i in events){
+                    let date = events[i].dateTime.getDate()
+                    const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
+        "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+                    let month = monthNames[events[i].dateTime.getMonth()]
+                    let year = events[i].dateTime.getFullYear()
+                    events[i].date = date + " " + month + ' ' + year
+    
+                    console.log(date,month, year);
+                }
+                
+                resolve(events.reverse())
+            })
+        })
+        
     }
 }

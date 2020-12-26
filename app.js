@@ -15,6 +15,7 @@ db.connect().then((error)=>{
 
 var studentRouter = require('./routes/student');
 var tutorRouter = require('./routes/tutor');
+var orderRouter = require('./routes/order')
 
 var app = express();
 
@@ -45,6 +46,7 @@ app.use(session({secret:'key',resave:true, saveUninitialized:true, cookie:{maxAg
 
 app.use('/', studentRouter);
 app.use('/tutor', tutorRouter);
+app.use('/order', orderRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

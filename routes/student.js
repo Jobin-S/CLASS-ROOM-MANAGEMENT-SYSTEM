@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 var studentHelpers = require('../helpers/student-helpers');
 var path = require('path')
-var multer = require('multer')
+var multer = require('multer');
 
 const submitAssignmentStorage = multer.diskStorage({
   destination:`${__dirname}/../public/pdf/students/assignments/`,
@@ -31,11 +31,13 @@ router.get('/',verifyLogin,async (req, res)=>{
   req.session.student.attendance = currentAttendance.attendance
   req.session.student.currentDate = currentAttendance.date
   let announcements = await studentHelpers.getAnnouncements()
-  
+  let events = await studentHelpers.getEvents()
+
     res.render('student/dashboard',{
       title:'students dashboard',
       student: req.session.student,
-      announcements
+      announcements,
+      events
     }) 
   
 })
@@ -173,7 +175,8 @@ router.get('/notes', verifyLogin,async (req, res)=>{
 router.get('/assignment/:id',verifyLogin, async(req, res)=>{
 let assignment = await studentHelpers.getSingleAssignment(req.params.id)
 let currentAttendance = await studentHelpers.verifyAttendance(req.session.student._id)
-  req.session.student.attendance = currentAttendance.attendance
+console.log(currentAttendance);
+  req.session.student.attendance = currentAttendance.attendance ? true : false
   res.render('student/single-assignment',{
     title:'assignment',
     student:req.session.student,
@@ -247,6 +250,32 @@ router.get('/announcement/:id', verifyLogin,async (req, res)=>{
     announcement
   })
 })
+
+router.get('/event/:id', verifyLogin, async (req, res)=>{
+  let event = await studentHelpers.getSingleEvent(req.params.id)
+  let isPurchased = await studentHelpers.VerifyEventPurchase(req.session.student._id, req.params.id)
+  console.log(isPurchased);
+  console.log(event);
+  res.render('student/single-event',{
+    student:req.session.student,
+    title:event.title,
+    event,
+    isPurchased
+  })
+})
+
+router.get('/purchased-event',verifyLogin, (req, res)=>{
+  if(req.session.student.lastPurchasedTicket === null) res.redirect('/') 
+  let ticket = req.session.student.lastPurchasedTicket
+  console.log(ticket);
+  res.render('student/confirm-order', {
+    student:req.session.student,
+    title:'Payment Success',
+    ticket
+  })
+  req.session.student.lastPurchasedTicket = null
+})
+
 
 
 module.exports = router;

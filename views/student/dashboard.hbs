@@ -225,39 +225,16 @@
                         </div>
                     </div>
                     <div class="notice-box-wrap">
-                        <div class="notice-list">
-                            <div class="post-date bg-skyblue">16 June, 2019</div>
-                            <h6 class="notice-title"><a href="#">Great School manag mene esom tus eleifend lectus
-                                    sed maximus mi faucibusnting.</a></h6>
-                            <div class="entry-meta"> Jennyfar Lopez / <span>5 min ago</span></div>
-                        </div>
-                        <div class="notice-list">
-                            <div class="post-date bg-yellow">16 June, 2019</div>
-                            <h6 class="notice-title"><a href="#">Great School manag printing.</a></h6>
-                            <div class="entry-meta"> Jennyfar Lopez / <span>5 min ago</span></div>
-                        </div>
-                        <div class="notice-list">
-                            <div class="post-date bg-pink">16 June, 2019</div>
-                            <h6 class="notice-title"><a href="#">Great School manag Nulla rhoncus eleifensed mim
-                                    us mi faucibus id. Mauris vestibulum non purus lobortismenearea</a></h6>
-                            <div class="entry-meta"> Jennyfar Lopez / <span>5 min ago</span></div>
-                        </div>
-                        <div class="notice-list">
-                            <div class="post-date bg-skyblue">16 June, 2019</div>
-                            <h6 class="notice-title"><a href="#">Great School manag mene esom text of the printing.</a>
-                            </h6>
-                            <div class="entry-meta"> Jennyfar Lopez / <span>5 min ago</span></div>
-                        </div>
-                        <div class="notice-list">
-                            <div class="post-date bg-yellow">16 June, 2019</div>
-                            <h6 class="notice-title"><a href="#">Great School manag printing.</a></h6>
-                            <div class="entry-meta"> Jennyfar Lopez / <span>5 min ago</span></div>
-                        </div>
-                        <div class="notice-list">
-                            <div class="post-date bg-pink">16 June, 2019</div>
-                            <h6 class="notice-title"><a href="#">Great School manag meneesom.</a></h6>
-                            <div class="entry-meta"> Jennyfar Lopez / <span>5 min ago</span></div>
-                        </div>
+                        {{#each events}}
+                    <div class="notice-list">
+                        <div class="post-date bg-skyblue">{{date}}</div>
+                        <h3 class="notice-title"><a href="/event/{{_id}}">{{title}}</a></h3>
+                        <h6 class="notice-title"><a href="/event/{{_id}}">{{description}}</a></h6>
+                        {{#if isPaid}}
+                            <div class="entry-meta">Paid Event /<span> Rs {{price}}</span></div>
+                        {{/if}}
+                    </div>
+                    {{/each}}
                     </div>
                 </div>
             </div>

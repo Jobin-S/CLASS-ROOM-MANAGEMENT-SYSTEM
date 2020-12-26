@@ -48,6 +48,14 @@ const announcementStorage = multer.diskStorage({
   }
 })
 
+const eventStorage = multer.diskStorage({
+  destination:`${__dirname}/../public/uploads/event/`,
+  filename:(req, file, cb)=>{
+    let fileName = `${Date.now()}${path.extname(file.originalname)}`
+    cb(null, fileName)
+  }
+})
+
 const uploadPdf = multer({storage:pdfStorage})
 
 const uploadImage = multer({storage}).single('photo')
@@ -55,6 +63,8 @@ const uploadImage = multer({storage}).single('photo')
 const uploadNote = multer({storage:noteStorage})
 
 const UploadAnnouncement = multer({storage:announcementStorage})
+
+const uploadEvent = multer({storage:eventStorage})
 
 const verifyLogin = (req, res, next)=>{
   req.session.previousPath = false
@@ -73,12 +83,14 @@ router.get('/Dashboard',verifyLogin,async function(req, res, next) {
   let tutorName = await tutorHelpers.getTutorName(req.session.tutor.email)
   let image = await tutorHelpers.getProfilePic(req.session.tutor.email)
   let announcements = await tutorHelpers.getAnnouncements()
+  let events = await tutorHelpers.getEvents()
 
   res.render('tutor/dashboard',{
   title:"Tutor Dashboard", 
   profilePic:image,
   announcements,
   tutor:true, 
+  events,
   tutorName:tutorName,
   dashboard:sidebarToggle})
 });
@@ -473,4 +485,26 @@ router.get('/announcement/:id', verifyLogin,async (req, res)=>{
     profilePic:image
   })
 })
+
+router.get('/event',verifyLogin,async (req, res)=>{
+let events = await tutorHelpers.getEvents()
+console.log(events);
+  res.render('tutor/event',{
+    title:'Event',
+    tutor:req.session.tutor,
+    events
+  })
+})
+
+router.post('/event',uploadEvent.fields([{name:'pdf', maxCount:1},{name:"video", maxCount:1},{name:"img", maxCount:1}]), (req, res)=>{
+  let image = req.files.img ? req.files.img[0].filename : null
+  let video = req.files.video ? req.files.video[0].filename :null
+  let pdf = req.files.pdf ? req.files.pdf[0].filename : null
+  console.log(req.body);
+  tutorHelpers.addEvent(video, pdf, image, req.body).then(()=>{
+    res.end()
+  })
+
+})
+
 module.exports = router;
