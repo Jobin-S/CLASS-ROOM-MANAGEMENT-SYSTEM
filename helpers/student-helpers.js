@@ -6,7 +6,7 @@ require('dotenv').config()
 var unirest = require('unirest');
 const bcrypt = require('bcrypt')
 const { v4: uuidv4 } = require('uuid')
-const { ObjectID } = require('mongodb')
+const { ObjectID, ObjectId } = require('mongodb')
 
 module.exports = {
     sendOtp:(phone)=>{
@@ -240,16 +240,17 @@ module.exports = {
         let month = monthNames[dt.getMonth()]
         let year = dt.getFullYear().toString()
         let dateDashboard = date + " " + month + " " +year
-        console.log(date, year, month);
       let student = await db.get().collection(collection.STUDENT_COLLECTION).aggregate([
-        {$match:{'_id':ObjectID(userId), 'notes.date':"26", 'notes.month':month, 'notes.year':year}}
+        {$match:{'_id':ObjectId(userId), 'notes.date':'14', 'notes.month':"Jan", 'notes.year':"2021"}}
       ]).toArray()
+      console.log(student);
         console.log("student: "+student[0]);
+
         if(student){
           console.log('present: '+student);
 
           resolve({attendance:true, date :dateDashboard})
-        }else{
+        }else if(!student){
           console.log('absent: '+student);
 
           resolve({attendance:false, date :dateDashboard})
@@ -320,13 +321,32 @@ getSingleEvent:(id)=>{
 },
 VerifyEventPurchase:(studentId, eventId)=>{
   return new Promise(async(resolve, reject) => {
-    let order = await db.get().collection(collection.ORDER_COLLECTION)
+    let orders = await db.get().collection(collection.ORDER_COLLECTION)
     .aggregate([
       {$match:{'studentId':studentId, 'eventId':eventId}}
     ]).toArray()
-      resolve(order[0]);
+    console.log(orders);
+    var i;
+    let status = false
+    for (i in orders){
+      if(orders[i].isPaid === true) status = true
+    }
+    console.log(status);
+    if(status){
+      resolve(orders[0])
+    }else{
+      resolve(false)
+    }
     
   })
   
+},
+getAllGalleryItems:()=>{
+    return new Promise(async(resolve, reject) => {
+        let items = await db.get().collection(collection.GALLERY_COLLECTION).find({}).toArray()
+        console.log(items);
+        resolve(items.reverse())
+    })
+    
 }
 }

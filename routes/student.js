@@ -276,6 +276,14 @@ router.get('/purchased-event',verifyLogin, (req, res)=>{
   req.session.student.lastPurchasedTicket = null
 })
 
+router.get('/gallery',verifyLogin, async(req, res)=>{
+  let galleryItems = await studentHelpers.getAllGalleryItems()
+  res.render('student/gallery',{
+    student:req.session.student,
+    title:'Gallery',
+    galleryItems
+  })
+})
 
 
 module.exports = router;

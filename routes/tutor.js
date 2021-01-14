@@ -56,6 +56,14 @@ const eventStorage = multer.diskStorage({
   }
 })
 
+const galleryStorage = multer.diskStorage({
+  destination:`${__dirname}/../public/uploads/gallery/`,
+  filename:(req, file, cb)=>{
+    let fileName = `${Date.now()}${path.extname(file.originalname)}`
+    cb(null, fileName)
+  }
+})
+
 const uploadPdf = multer({storage:pdfStorage})
 
 const uploadImage = multer({storage}).single('photo')
@@ -65,6 +73,8 @@ const uploadNote = multer({storage:noteStorage})
 const UploadAnnouncement = multer({storage:announcementStorage})
 
 const uploadEvent = multer({storage:eventStorage})
+
+const uploadGallery = multer({storage:galleryStorage})
 
 const verifyLogin = (req, res, next)=>{
   req.session.previousPath = false
@@ -487,12 +497,16 @@ router.get('/announcement/:id', verifyLogin,async (req, res)=>{
 })
 
 router.get('/event',verifyLogin,async (req, res)=>{
+  let tutorName = await tutorHelpers.getTutorName(req.session.tutor.email)
+  let image = await tutorHelpers.getProfilePic(req.session.tutor.email)
 let events = await tutorHelpers.getEvents()
 console.log(events);
   res.render('tutor/event',{
     title:'Event',
     tutor:req.session.tutor,
-    events
+    events,
+    tutorName,
+    profilePic:image
   })
 })
 
@@ -505,6 +519,37 @@ router.post('/event',uploadEvent.fields([{name:'pdf', maxCount:1},{name:"video",
     res.end()
   })
 
+})
+
+router.get('/gallery',verifyLogin, async(req, res)=>{
+  let tutorName = await tutorHelpers.getTutorName(req.session.tutor.email)
+  let image = await tutorHelpers.getProfilePic(req.session.tutor.email)
+  let galleryItems = await tutorHelpers.getAllGalleryItems()
+  console.log('gallery items:'+galleryItems);
+  res.render('tutor/gallery',{
+    tutor:req.session.tutor,
+    title:'Gallery',
+    tutorName,
+    profilePic:image,
+    galleryItems
+  })
+})
+
+router.post('/gallery', uploadGallery.single('img'),(req,res)=>{
+  console.log(req.body.title);
+  console.log(req.file.filename);
+  tutorHelpers.addGallery(req.file.filename, req.body.title).then(
+    res.end()
+  )
+  
+})
+
+router.post('/gallery/delete',(req, res)=>{
+  let id = req.body.id
+  console.log(id);
+  tutorHelpers.deleteGallerySingleItem(id).then((status)=>{
+    res.json(status)
+  })
 })
 
 module.exports = router;

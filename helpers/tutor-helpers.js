@@ -412,5 +412,34 @@ module.exports = {
             })
         })
         
+    },
+    addGallery:(fileName, title)=>{
+        return new Promise((resolve, reject) => {
+            db.get().collection(collection.GALLERY_COLLECTION)
+            .insertOne({
+                title:title,
+                file:fileName
+            }).then(()=>{
+                resolve()
+            })
+        })
+        
+    },
+    getAllGalleryItems:()=>{
+        return new Promise(async(resolve, reject) => {
+            let items = await db.get().collection(collection.GALLERY_COLLECTION).find({}).toArray()
+            console.log(items);
+            resolve(items)
+        })
+        
+    },
+    deleteGallerySingleItem:(id)=>{
+        return new Promise((resolve, reject) => {
+            db.get().collection(collection.GALLERY_COLLECTION)
+            .deleteOne({_id:objectId(id)}).then(()=>{
+                resolve({status:true})
+            })
+        })
+        
     }
 }

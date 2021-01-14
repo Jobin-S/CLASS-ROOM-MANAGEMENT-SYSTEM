@@ -23,8 +23,9 @@
                         Event</button>
                     {{#if isPurchased}}
                     <a type="button"
-                        class="btn-fill-lmd radius-30 text-light shadow-dark-pastel-blue bg-dark-pastel-blue mb-5">You have purchased</a>
-                        <p>Ticket no # {{isPurchased.ticketNumber}}</p>
+                        class="btn-fill-lmd radius-30 text-light shadow-dark-pastel-blue bg-dark-pastel-blue mb-5">You
+                        have purchased</a>
+                    <p>Ticket no # {{isPurchased.ticketNumber}}</p>
                     {{else}}
                     <a type="button" onclick="showConfirmationAlert('{{event._id}}')"
                         class="btn-fill-lmd radius-30 text-light shadow-dark-pastel-blue bg-dark-pastel-blue mb-5">Buy
@@ -78,7 +79,9 @@
         <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
         <script>
-            let buyTicket = function (id) {
+        // Razorpay starts here
+
+            let razorpayTicketPurchase = function (id) {
                 $.ajax({
                     url: '/order/razorpay',
                     method: 'post',
@@ -95,7 +98,7 @@
                 
             }
 
-            let showConfirmationAlert = function (id) {
+            let showConfirmationAlert =function (id) {
                 Swal.fire({
                     title: 'Are you sure?',
                     text: "Click confirm for purchase Event ticket",
@@ -106,9 +109,38 @@
                     confirmButtonText: 'Confirm'
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        buyTicket(id)
+                        selectMethod()
                     }
                 })
+
+                const inputOptions = new Promise((resolve) => {
+                    setTimeout(() => {
+                        resolve({
+                            'razorpay': 'Razorpay',
+                            'paypal': 'PayPal'
+                        })
+                    }, 1000)
+                })
+
+                let selectMethod = async function(){
+                    const { value: paymentMethod } = await Swal.fire({
+                    title: 'Select Payment Method',
+                    input: 'radio',
+                    inputOptions: inputOptions,
+                    inputValidator: (value) => {
+                        if (!value) {
+                            return 'You need to choose Payment method!'
+                        }
+                    }
+                })
+
+                if (paymentMethod === 'razorpay') {
+                    razorpayTicketPurchase(id)
+                } else if(paymentMethod === 'paypal'){
+                    paypalTicketPurchase()
+                }
+                }
+                
             }
 
             let razorpayInit = function (order) {
@@ -166,4 +198,23 @@
                 })
             }
 
+        // Razorpay ends here
+        // paypal starts here
+
+            let paypalTicketPurchase = function(){
+                let event = {
+                    title:'{{event.title}}',
+                    price:{{event.price}},
+                    eventId:'{{event._id}}',
+                    description:'{{event.description}}'
+                }
+                $.ajax({
+                    url:'/order/paypal',
+                    method:'post',
+                    data:{event:event},
+                    success:(response)=>{
+                        location.href = response.url
+                    }
+                })
+            }
         </script>

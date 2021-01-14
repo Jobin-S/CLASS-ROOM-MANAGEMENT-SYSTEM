@@ -6,5 +6,6 @@ module.exports={
     NOTE_COLLECTION:'note',
     ANNOUNCEMENT_COLLECTION:'announcement',
     EVENT_COLLECTION:'event',
-    ORDER_COLLECTION:'order'
+    ORDER_COLLECTION:'order',
+    GALLERY_COLLECTION:'gallery'
 }
