@@ -313,7 +313,7 @@ getEvents:()=>{
 getSingleEvent:(id)=>{
   return new Promise((resolve, reject) => {
     db.get().collection(collection.EVENT_COLLECTION)
-  .findOne({_id:ObjectID(id)}).then((event)=>{
+  .findOne({_id:ObjectId(id)}).then((event)=>{
     resolve(event)
   })
   })
@@ -323,7 +323,7 @@ VerifyEventPurchase:(studentId, eventId)=>{
   return new Promise(async(resolve, reject) => {
     let orders = await db.get().collection(collection.ORDER_COLLECTION)
     .aggregate([
-      {$match:{'studentId':studentId, 'eventId':eventId}}
+      {$match:{'studentId':objectId(studentId), 'eventId':eventId}}
     ]).toArray()
     console.log(orders);
     var i;

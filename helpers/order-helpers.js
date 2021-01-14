@@ -1,8 +1,8 @@
 const db = require('../config/database')
 const collection = require('../config/collection')
 var Razorpay = require('razorpay');
-const { ObjectID } = require('mongodb');
 var paypal = require('paypal-rest-sdk');
+const objectId = require('mongodb').ObjectID
 
 paypal.configure({
     'mode': 'sandbox', //sandbox or live
@@ -35,7 +35,7 @@ module.exports = {
             db.get().collection(collection.ORDER_COLLECTION)
             .insertOne({
                 eventId:eventId,
-                studentId:studentId,
+                studentId:objectId(studentId),
                 dateTime:new Date,
                 status:"pending",
                 isPaid:false,
@@ -71,7 +71,7 @@ module.exports = {
             console.log('date,', ticketId);
             db.get().collection(collection.ORDER_COLLECTION)
             .updateOne(
-                {_id:ObjectID(orderId)},
+                {_id:objectId(orderId)},
                 {$set:{
                     status:'completed',
                     isPaid:true,
@@ -160,9 +160,9 @@ module.exports = {
             console.log('date,', ticketId);
             db.get().collection(collection.ORDER_COLLECTION)
             .updateOne(
-                {_id:ObjectID(orderId)},
+                {_id:ObjectId(orderId)},
                 {$set:{
-                    status:'completed',
+                    status:'paid',
                     isPaid:true,
                     ticketNumber:ticketId,
                     paypalPaymentId:paypalPaymentId

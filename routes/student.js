@@ -254,7 +254,7 @@ router.get('/announcement/:id', verifyLogin,async (req, res)=>{
 router.get('/event/:id', verifyLogin, async (req, res)=>{
   let event = await studentHelpers.getSingleEvent(req.params.id)
   let isPurchased = await studentHelpers.VerifyEventPurchase(req.session.student._id, req.params.id)
-  console.log(isPurchased);
+  console.log('event purcased: '+isPurchased);
   console.log(event);
   res.render('student/single-event',{
     student:req.session.student,

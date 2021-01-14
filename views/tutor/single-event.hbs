@@ -1,0 +1,98 @@
+<div class="dashboard-content-one">
+    <!-- Breadcubs Area Start Here -->
+    <div class="breadcrumbs-area">
+        <h3>{{event.title}}</h3>
+        <ul>
+            <li>
+                <a href="/tutor/dashboard">Dashboard</a>
+            </li>
+            <li>{{title}}</li>
+        </ul>
+    </div>
+
+    <div class="card height-auto">
+        <div class="card-body">
+            <div class="heading-layout1">
+                <div class="item-title text-center col-12">
+                    <h2 class="text-danger  mt-2">{{event.title}} </h2><br>
+                    <h5 class="m-5">{{event.description}}</h5>
+
+                    {{#if event.isPaid}}
+                    <button type="button"
+                        class="btn-fill-lmd radius-30 text-light shadow-dark-pastel-green bg-dark-pastel-green mb-5">Paid
+                        Event</button>
+                    <div class="table-responsive">
+                        <table class="table display data-table text-nowrap">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        <label class="form-check-label">No</label>
+                                    </th>
+                                    <th>Photo</th>
+                                    <th>Name</th>
+                                    <th>ticket no</th>
+                                    <th>method</th>
+                                    <th>status</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {{#each orders}}
+                                <tr>
+                                    <td>                                    
+                                        <label class="form-check-label">{{@key}}</label>                                        
+                                    </td>
+                                    <td class="text-center"><img src="/img/figure/student2.png" alt="student"></td>
+                                    <td><a >{{studentName}}</a></td>
+                                    <td>{{ticketNumber}}</td>
+                                    <td>{{method}}</td>
+                                    <td>{{status}}</td>
+                                    
+
+                                </tr>
+                                {{/each}}
+
+                            </tbody>
+                        </table>
+                    </div>
+                    {{else}}
+                    <button type="button"
+                        class="btn-fill-lmd radius-30 text-light shadow-dark-pastel-red bg-dark-pastel-red mb-5">Free
+                        Event</button>
+                    {{/if}}
+
+                </div>
+            </div>
+            <div class="container-fluid">
+                <div class="row">
+                    {{#if event.imgFile}}
+                    <div class="col-md-6">
+                        <img src="/uploads/event/{{event.imgFile}}" alt="">
+                    </div>
+                    {{/if}}
+                    {{#if event.pdf}}
+                    <div class="col-md-6">
+                        <iframe width="500" height="456px" src="/uploads/event/{{event.pdf}}" alt=""></iframe>
+                    </div>
+                    {{/if}}
+                    {{#if event.video}}
+                    <div class="col-md-6" style="margin-top: 5rem;">
+                        <video id="my-video" class="video-js" controls preload="auto" width="640" height="264"
+                            data-setup="{}">
+                            <source src="/uploads/event/{{event.video}}" type="video/mp4" />
+
+                            <p class="vjs-no-js">
+                                To view this video please enable JavaScript, and consider upgrading to a
+                                web browser that
+                                <a href="https://videojs.com/html5-video-support/" target="_blank">supports HTML5
+                                    video</a>
+                            </p>
+                        </video>
+                    </div>
+                </div>
+
+                {{/if}}
+
+            </div>
+        </div>
+        <script src="https://vjs.zencdn.net/7.10.2/video.min.js"></script>

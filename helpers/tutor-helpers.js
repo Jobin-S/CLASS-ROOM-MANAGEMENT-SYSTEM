@@ -441,5 +441,36 @@ module.exports = {
             })
         })
         
+    },
+    getSingleEvent:(id)=>{
+      return new Promise((resolve, reject) => {
+        db.get().collection(collection.EVENT_COLLECTION)
+      .findOne({_id:ObjectID(id)}).then((event)=>{
+        resolve(event)
+      })
+      })
+      
+    },
+    getEventPurchasedList:(eventId)=>{
+        return new Promise(async(resolve, reject) => {
+            let orders = await db.get().collection(collection.ORDER_COLLECTION).aggregate([
+                {$match:{eventId:eventId}},
+                {
+                   $lookup: {
+                      from: "student",
+                      localField: "studentId",    // field in the orders collection
+                      foreignField: "_id",  // field in the items collection
+                      as: "student"
+                   }
+                },
+                {
+                    $project:{method:1, isPaid:1, dateTime:1,ticketNumber:1, status:1, studentName:{$arrayElemAt:['$student.fname', 0]}}
+                }
+             
+             ]).toArray()
+            console.log(orders);
+            resolve(orders)
+        })
+        
     }
 }

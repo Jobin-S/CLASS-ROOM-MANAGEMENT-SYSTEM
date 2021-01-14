@@ -87,6 +87,9 @@ const verifyLogin = (req, res, next)=>{
   }
 }
 
+router.get('/',(req, res)=>{
+  res.redirect('/tutor/dashboard')
+})
 
 /* GET users listing. */
 router.get('/Dashboard',verifyLogin,async function(req, res, next) {
@@ -549,6 +552,21 @@ router.post('/gallery/delete',(req, res)=>{
   console.log(id);
   tutorHelpers.deleteGallerySingleItem(id).then((status)=>{
     res.json(status)
+  })
+})
+
+router.get('/event/:id',verifyLogin,async(req, res)=>{
+  let tutorName = await tutorHelpers.getTutorName(req.session.tutor.email)
+  let image = await tutorHelpers.getProfilePic(req.session.tutor.email)
+  let event = await tutorHelpers.getSingleEvent(req.params.id)
+  let orders = await tutorHelpers.getEventPurchasedList(req.params.id)
+  res.render('tutor/single-event',{
+    tutor:req.session.tutor,
+    tutorName,
+    profilePic:image,
+    title:'event details',
+    event,
+    orders
   })
 })
 
