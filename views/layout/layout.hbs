@@ -37,6 +37,9 @@
     <link rel="stylesheet" href="/stylesheets/style.css">
     <link href="https://releases.transloadit.com/uppy/v1.23.2/uppy.min.css" rel="stylesheet">
     <link href="https://vjs.zencdn.net/7.10.2/video-js.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/3.0.5/socket.io.js"
+        integrity="sha512-2rUSTSAeOO02jF6eBqENNqPs1EohenJ5j+1dgDPdXSLz9nOlrr8DJk4zW/lDy8rjhGCSonW3Gx812XJQIKZKJQ=="
+        crossorigin="anonymous"></script>
     <title>{{title}}</title>
 
 </head>
@@ -44,13 +47,13 @@
 <body>
     {{#if tutor}}
     {{> tutor-sidebar}}
-        {{else if student}}
-            {{> student-sidebar}}
+    {{else if student}}
+    {{> student-sidebar}}
     {{/if}}
     {{{body}}}
 
     {{#if tutor}}
-        {{>tutor-footer}}
+    {{>tutor-footer}}
     {{/if}}
 
     <!-- jquery-->
@@ -77,9 +80,45 @@
 
     <!-- Select 2 Js -->
     <script src="/js/select2.min.js"></script>
+
+
     <!-- Date Picker Js -->
     <script src="/js/datepicker.min.js"></script>
-    
+    {{#if student}}
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.12.0/dist/sweetalert2.all.min.js"></script>
+    <script>
+        var socket = io('http://localhost:3000/')
+        socket.on('message', (message) => {
+            let timerInterval
+            Swal.fire({
+                title: 'Notification',
+                html: message.message,
+                timer: 5000,
+                timerProgressBar: true,
+                didOpen: () => {
+                    Swal.showLoading()
+                    timerInterval = setInterval(() => {
+                        const content = Swal.getContent()
+                        if (content) {
+                            const b = content.querySelector('b')
+                            if (b) {
+                                b.textContent = Swal.getTimerLeft()
+                            }
+                        }
+                    }, 100)
+                },
+                willClose: () => {
+                    clearInterval(timerInterval)
+                }
+            }).then((result) => {
+                /* Read more about handling dismissals below */
+                if (result.dismiss === Swal.DismissReason.timer) {
+                    console.log('I was closed by the timer')
+                }
+            })
+        })
+    </script>
+    {{/if}}
 </body>
 
 </html>

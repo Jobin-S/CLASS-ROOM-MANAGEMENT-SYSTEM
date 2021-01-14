@@ -7,7 +7,6 @@
 var app = require('../app');
 var debug = require('debug')('classroom-management-system:server');
 var http = require('http');
-
 /**
  * Get port from environment and store in Express.
  */
@@ -29,6 +28,17 @@ server.listen(port);
 server.on('error', onError);
 server.on('listening', onListening);
 
+var io = require('socket.io')(server);
+
+io.on('connection', function(client) {  
+  console.log('Client connected...');
+  console.log(client.id);
+  client.on('message',(data)=>{
+    console.log(data);
+    client.broadcast.emit('message', data)
+  })
+  
+})
 /**
  * Normalize a port into a number, string, or false.
  */

@@ -4,6 +4,17 @@ var studentHelpers = require('../helpers/student-helpers');
 var path = require('path')
 var multer = require('multer');
 
+const app = require('../app')
+var http = require('http').Server(app);
+var io = require('socket.io')(http);
+
+io.on('connection', (socket)=>{
+  console.log('auth value: '+socket.id);
+  socket.on('sendNotification', (details)=>{
+    socket.broadCast.emit('sendNotification', details)
+  })
+})
+
 const submitAssignmentStorage = multer.diskStorage({
   destination:`${__dirname}/../public/pdf/students/assignments/`,
   filename:(req, file, cb)=>{
