@@ -37,18 +37,30 @@ const verifyLogin = (req, res, next)=>{
   }
 }
 
-router.get('/',verifyLogin,async (req, res)=>{
+router.get('/',(req, res)=>{
+  res.render('student/role-selection')
+})
+
+router.get('/dashboard',verifyLogin,async (req, res)=>{
   let currentAttendance = await studentHelpers.verifyAttendance(req.session.student._id)
   req.session.student.attendance = currentAttendance.attendance
   req.session.student.currentDate = currentAttendance.date
   let announcements = await studentHelpers.getAnnouncements()
   let events = await studentHelpers.getEvents()
+  let notifications = await studentHelpers.getNotification()
+  let pendingAssigment = await studentHelpers.getPendingAssignment(req.session.student._id)
+  let pendingNotes = await studentHelpers.getPendingNotes(req.session.student._id)
+  let profilePic = await studentHelpers.getStudentProfilePic(req.session.student._id)
 
     res.render('student/dashboard',{
       title:'students dashboard',
       student: req.session.student,
       announcements,
-      events
+      events,
+      notifications,
+      pendingAssigment,
+      pendingNotes,
+      profilePic
     }) 
   
 })
@@ -91,7 +103,7 @@ router.post('/register',(req, res)=>{
     studentHelpers.getStudent(req.session.studentNum).then((student)=>{
       req.session.student = student;
       req.session.studentLoggedIn = true
-      res.redirect('/')
+      res.redirect('/dashboard')
     })
   })
 })
@@ -118,7 +130,7 @@ router.post('/login',(req, res)=>{
       req.session.student = response.user
       req.session.studentLoggedIn = true
       
-    res.redirect('/')
+    res.redirect('/dashboard')
       
     }else{
       req.session.loginError = response.message
@@ -129,10 +141,15 @@ router.post('/login',(req, res)=>{
 
 router.get('/attendance',verifyLogin,async (req, res)=>{
   let currentAttendance = await studentHelpers.verifyAttendance(req.session.student._id)
+  let attendanceData = await studentHelpers.getAttendanceDetails(req.session.student._id)
   req.session.student.attendance = currentAttendance.attendance
+  let profilePic = await studentHelpers.getStudentProfilePic(req.session.student._id)
+
   res.render('student/attendance',{
     title:'Attendance',
-    student: req.session.student
+    student: req.session.student,
+    attendanceData,
+    profilePic
   })
 })
 
@@ -145,18 +162,24 @@ router.get('/logout',(req, res)=>{
 router.get('/task', verifyLogin,async (req, res)=>{
   let currentAttendance = await studentHelpers.verifyAttendance(req.session.student._id)
   req.session.student.attendance = currentAttendance.attendance
+  let profilePic = await studentHelpers.getStudentProfilePic(req.session.student._id)
+
   res.render('student/task',{
     student:req.session.student,
-    title:"Today's Task"
+    title:"Today's Task",
+    profilePic
   })
 })
 
 router.get('/profile', verifyLogin,async (req, res)=>{
   let currentAttendance = await studentHelpers.verifyAttendance(req.session.student._id)
   req.session.student.attendance = currentAttendance.attendance
+  let profilePic = await studentHelpers.getStudentProfilePic(req.session.student._id)
+
   res.render('student/profile',{
     student:req.session.student,
-    title:'profile'
+    title:'profile',
+    profilePic
   })
 })
 
@@ -164,10 +187,13 @@ router.get('/assignments', verifyLogin,async (req, res)=>{
 let assignments = await studentHelpers.getAllAssignments(req.session.student._id)
 let currentAttendance = await studentHelpers.verifyAttendance(req.session.student._id)
   req.session.student.attendance = currentAttendance.attendance
+  let profilePic = await studentHelpers.getStudentProfilePic(req.session.student._id)
+
   res.render('student/assignments',{
     title:'assignments',
     assignments:assignments,
-    student:req.session.student
+    student:req.session.student,
+    profilePic
   })
 })
 
@@ -175,11 +201,14 @@ router.get('/notes', verifyLogin,async (req, res)=>{
   let notes = await studentHelpers.getAllNotes(req.session.student.phone)
   let currentAttendance = await studentHelpers.verifyAttendance(req.session.student._id)
   req.session.student.attendance = currentAttendance.attendance
+  let profilePic = await studentHelpers.getStudentProfilePic(req.session.student._id)
+
 
   res.render('student/notes',{
     title:'Notes',
     student:req.session.student,
-    notes
+    notes,
+    profilePic
   })
 })
 
@@ -188,10 +217,13 @@ let assignment = await studentHelpers.getSingleAssignment(req.params.id)
 let currentAttendance = await studentHelpers.verifyAttendance(req.session.student._id)
 console.log(currentAttendance);
   req.session.student.attendance = currentAttendance.attendance ? true : false
+  let profilePic = await studentHelpers.getStudentProfilePic(req.session.student._id)
+
   res.render('student/single-assignment',{
     title:'assignment',
     student:req.session.student,
-    assignment:assignment
+    assignment:assignment,
+    profilePic
   })
 })
 
@@ -205,7 +237,7 @@ router.post('/assignment/submit/:id', submitAssignment.single('pdf') ,(req, res)
 
 router.get('/otp-login',(req, res)=>{
   if(req.session.studentLoggedIn){
-    res.redirect('/')
+    res.redirect('/dashboard')
   }else{
     res.render('student/otp-login',{
       title:'otp Login'
@@ -232,11 +264,13 @@ router.get('/note/:id', verifyLogin,async (req, res)=>{
   let note = await studentHelpers.getOneNote(req.params.id)
   let currentAttendance = await studentHelpers.verifyAttendance(req.session.student._id)
   req.session.student.attendance = currentAttendance.attendance
+  let profilePic = await studentHelpers.getStudentProfilePic(req.session.student._id)
 
   res.render('student/single-note',{
     title:note.topic,
     note,
-    student:req.session.student
+    student:req.session.student,
+    profilePic
   })
 })
 
@@ -253,12 +287,15 @@ router.post('/mark-attendance/:id', (req, res)=>{
 
 router.get('/announcement/:id', verifyLogin,async (req, res)=>{
   let announcement = await studentHelpers.getSingleAnnouncement(req.params.id)
+  let profilePic = await studentHelpers.getStudentProfilePic(req.session.student._id)
+
   
   console.log(announcement);
   res.render('student/single-announcement',{
     student:req.session.student,
     title:announcement.title,
-    announcement
+    announcement,
+    profilePic
   })
 })
 
@@ -266,31 +303,41 @@ router.get('/event/:id', verifyLogin, async (req, res)=>{
   let event = await studentHelpers.getSingleEvent(req.params.id)
   let isPurchased = await studentHelpers.VerifyEventPurchase(req.session.student._id, req.params.id)
   console.log('event purcased: '+isPurchased);
+  let profilePic = await studentHelpers.getStudentProfilePic(req.session.student._id)
+
   console.log(event);
   res.render('student/single-event',{
     student:req.session.student,
     title:event.title,
     event,
-    isPurchased
+    isPurchased,
+    profilePic
   })
 })
 
-router.get('/purchased-event',verifyLogin, (req, res)=>{
-  if(req.session.student.lastPurchasedTicket === null) res.redirect('/') 
+router.get('/purchased-event',verifyLogin, async(req, res)=>{
+  if(req.session.student.lastPurchasedTicket === null) res.redirect('/dashboard') 
   let ticket = req.session.student.lastPurchasedTicket
+  let profilePic = await studentHelpers.getStudentProfilePic(req.session.student._id)
+
   console.log(ticket);
   res.render('student/confirm-order', {
     student:req.session.student,
     title:'Payment Success',
-    ticket
+    ticket,
+    profilePic
+
   })
   req.session.student.lastPurchasedTicket = null
 })
 
 router.get('/gallery',verifyLogin, async(req, res)=>{
   let galleryItems = await studentHelpers.getAllGalleryItems()
+  let profilePic = await studentHelpers.getStudentProfilePic(req.session.student._id)
+
   res.render('student/gallery',{
     student:req.session.student,
+    profilePic,
     title:'Gallery',
     galleryItems
   })

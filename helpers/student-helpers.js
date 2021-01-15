@@ -348,5 +348,67 @@ getAllGalleryItems:()=>{
         resolve(items.reverse())
     })
     
+},
+getNotification:()=>{
+  return new Promise((resolve, reject) => {
+    db.get().collection(collection.ASSIGNMENT_COLLECTION)
+    .find().sort({_id:-1}).limit(3).toArray().then((details)=>{
+      console.log(details);
+      resolve(details)
+    })
+  })
+  
+},
+getPendingAssignment:(id)=>{
+  return new Promise(async(resolve, reject) => {
+    let assignmentsCount = await db.get().collection(collection.ASSIGNMENT_COLLECTION).countDocuments()
+    let completedAssignment = await db.get().collection(collection.STUDENT_COLLECTION).aggregate([
+      {$match:{_id:objectId(id)}},
+      {$project:{count:{$size:'$assignments'}}}
+      ]).toArray()
+      console.log(completedAssignment);
+    resolve(assignmentsCount - completedAssignment[0].count)
+  })
+  
+},
+getPendingNotes:(id)=>{
+  return new Promise(async(resolve, reject) => {
+    let notesCount = await db.get().collection(collection.NOTE_COLLECTION).countDocuments()
+    let completedNotes = await db.get().collection(collection.STUDENT_COLLECTION).aggregate([
+      {$match:{_id:objectId(id)}},
+      {$project:{count:{$size:'$notes'}}}
+      ]).toArray()
+    resolve(notesCount - completedNotes[0].count)
+  })
+  
+},
+getAttendanceDetails:(id)=>{
+  return new Promise(async(resolve, reject) => {
+    let totalClass = await db.get().collection(collection.NOTE_COLLECTION).countDocuments()
+    let presentClass = await db.get().collection(collection.STUDENT_COLLECTION).aggregate([
+      {$match:{_id:objectId(id)}},
+      {$project:{count:{$size:'$notes'}}}
+      ]).toArray()
+      console.log('totalclass: '+totalClass);
+      console.log(presentClass[0].count);
+      let data = {
+        totalClass:parseInt(totalClass),
+        present:parseInt(presentClass[0].count),
+        absent:totalClass-presentClass[0].count,
+        avg:Math.round((presentClass[0].count/totalClass)*100)
+      }
+      resolve(data)
+
+  })
+  
+},
+getStudentProfilePic:(id)=>{
+  return new Promise((resolve, reject) => {
+    db.get().collection(collection.STUDENT_COLLECTION)
+    .findOne({_id:objectId(id)}).then((student)=>{
+      resolve(student.profile)
+    })
+  })
+  
 }
 }

@@ -393,13 +393,14 @@
     /*-------------------------------------
           Doughnut Chart 
       -------------------------------------*/
+     
     if ($("#student-doughnut-chart").length) {
 
       var doughnutChartData = {
         labels: ["Present","Absent"],
         datasets: [{
           backgroundColor: ["#5df00e", "#f00216"],
-          data: [16, 15],
+          data: [10, 5],
           label: "Total Students"
         }, ]
       };

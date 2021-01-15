@@ -65,6 +65,14 @@ const galleryStorage = multer.diskStorage({
   }
 })
 
+const newStudentStorage = multer.diskStorage({
+  destination:`${__dirname}/../public/uploads/student/`,
+  filename:(req, file, cb)=>{
+    let fileName = `${Date.now()}${path.extname(file.originalname)}`
+    cb(null, fileName)
+  }
+})
+
 const uploadPdf = multer({storage:pdfStorage})
 
 const uploadImage = multer({storage}).single('photo')
@@ -76,6 +84,9 @@ const UploadAnnouncement = multer({storage:announcementStorage})
 const uploadEvent = multer({storage:eventStorage})
 
 const uploadGallery = multer({storage:galleryStorage})
+
+const newStudent = multer({storage:newStudentStorage})
+
 
 const verifyLogin = (req, res, next)=>{
   req.session.previousPath = false
@@ -312,18 +323,13 @@ router.post('/editprofile-image', uploadImage, (req, res)=>{
   res.redirect('/tutor/profile')
 })
 
-router.post('/admission', (req, res)=>{
+router.post('/admission',newStudent.single('profile'), (req, res)=>{
+  console.log(req.body);
   tutorHelpers.studentRegister(req.body).then(()=>{
     req.session.studentAdded = true
-    const sharp = require('sharp');
-    console.log(req.file)
-    sharp(req.file)
-    .extract({left: parseInt(324.86956521739125), top: parseInt(111.30434782608697), width: parseInt(1075.4782608695655), height: parseInt(1075.4782608695655)})
-    .toFile('public/uploads/tutor/output2.png')
-    .then( data => { console.log(data);})
-    .catch( err => {  console.log('error'); }); 
+    
     tutorHelpers.increaseAdmissionNum().then(()=>{
-      res.redirect('/tutor/all-students')
+      res.end()
     })
   })
 })

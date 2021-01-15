@@ -32,19 +32,19 @@
                     </div>
                 </div>
             </div>
-            <form class="new-added-form" enctype="multipart/form-data" id="admissionForm" method="POST" action="/tutor/admission">
+            <form class="new-added-form"    >
                 <div class="row">
                     <div class="col-xl-3 col-lg-6 col-12 form-group">
                         <label>First Name *</label>
-                        <input type="text" name="fname" placeholder="" class="form-control">
+                        <input type="text" id="fname" name="fname" placeholder="" class="form-control">
                     </div>
                     <div class="col-xl-3 col-lg-6 col-12 form-group">
                         <label>Last Name *</label>
-                        <input type="text" name="lname" placeholder="" class="form-control">
+                        <input type="text" id="lname" name="lname" placeholder="" class="form-control">
                     </div>
                     <div class="col-xl-3 col-lg-6 col-12 form-group">
                         <label>Gender *</label>
-                        <select class="select2" name="gender">
+                        <select class="select2" id="gender" name="gender">
                             <option value="">Please Select Gender *</option>
                             <option value="Male">Male</option>
                             <option value="Female">Female</option>
@@ -53,8 +53,8 @@
                     </div>
                     <div class="col-xl-3 col-lg-6 col-12 form-group">
                         <label>Date Of Birth *</label>
-                        <input type="text" name="dob" placeholder="dd/mm/yyyy" class="form-control air-datepicker"
-                            data-position='bottom right'>
+                        <input type="text" id="dob" name="dob" placeholder="dd/mm/yyyy"
+                            class="form-control air-datepicker" data-position='bottom right'>
                         <i class="far fa-calendar-alt"></i>
                     </div>
 
@@ -73,18 +73,18 @@
 
                     <div class="col-xl-3 col-lg-6 col-12 form-group">
                         <label>E-Mail</label>
-                        <input type="email" name="email" placeholder="" class="form-control">
+                        <input type="email" id="email" name="email" placeholder="" class="form-control">
                     </div>
 
 
                     <div class="col-xl-3 col-lg-6 col-12 form-group">
                         <label>Admission ID</label>
-                        <input type="text" name="admissionNum" value="{{admissionNum}}" class="form-control"
-                            readonly="readonly">
+                        <input type="text" id="admissionNum" name="admissionNum" value="{{admissionNum}}"
+                            class="form-control" readonly="readonly">
                     </div>
                     <div class="col-xl-3 col-lg-6 col-12 form-group">
                         <label>Phone</label>
-                        <input type="text" placeholder="" name="phone" class="form-control">
+                        <input type="text" id="phone" placeholder="" name="phone" class="form-control">
                     </div>
                     {{!-- <div class="col-lg-6 col-12 form-group">
                         <label>Short BIO</label>
@@ -93,10 +93,18 @@
                     </div> --}}
                     <div class="col-lg-6 col-12 form-group mg-t-30">
                         <label class="text-dark-medium">Upload Student Photo (150px X 150px)</label>
-                        <input type="file" name="profile" class="form-control-file">
+                        <a onclick="popUpUpload()" class="btn-fill-lg btn-gradient-yellow btn-hover-bluedark">Choose
+                            Image</a>
+                    </div>
+                    <div class="progress-outer text-center col-md-10" id="progressContainer" style="display: none;">
+                        <div class="progress">
+                            <div class="progress-bar progress-bar-striped progress-bar-info" id="progress"
+                                style="width:0;">
+                            </div>
+                        </div>
                     </div>
                     <div class="col-12 form-group mg-t-8">
-                        <button type="submit" class="btn-fill-lg btn-gradient-yellow btn-hover-bluedark">Save</button>
+                        <a onclick="submitForm()" class="btn-fill-lg btn-gradient-yellow btn-hover-bluedark">Save</a>
                         <button type="reset" class="btn-fill-lg bg-blue-dark btn-hover-yellow">Reset</button>
                     </div>
                 </div>
@@ -104,14 +112,6 @@
         </div>
     </div>
     <div>
-
-        {{!-- <div class="cropper__div">
-            <img id="blah" src="#" alt="your image" />
-        </div> --}}
-        <div id="cropped_result"></div>
-        <button id="crop_button">Crop</button>
-        <a onclick="popUpUpload()" class="btn btn-success">choose</a>
-
 
     </div>
     <!-- Admit Form Area End Here -->
@@ -141,6 +141,7 @@
         }
 
         var cropper;
+        let imgurl;
 
         function readURL(input) {
             if (input) {
@@ -157,7 +158,7 @@
                     showLoaderOnConfirm: true,
                     allowOutsideClick: false,
                     preConfirm: () => {
-                        var imgurl = cropper.getCroppedCanvas().toDataURL()
+                        imgurl = cropper.getCroppedCanvas().toDataURL()
                         console.log(imgurl)
                         Swal.fire({
                             title: 'Cropped!',
@@ -167,10 +168,8 @@
                             imageHeight: 400,
                             imageAlt: 'Cropped Image',
                         })
-                        var img = document.createElement("img");
-                        img.src = imgurl;
-                        document.getElementById("cropped_result").appendChild(img);
-                        console.log(cropData)
+                        console.log('imageurl: ' + imgurl)
+
                     }
                 })
             }
@@ -178,7 +177,69 @@
 
 
 
+        let submitForm = function () {
+            console.log('called')
+            let fname = document.getElementById('fname').value
+            let lname = document.getElementById('lname').value
+            let gender = document.getElementById('gender').value
+            let dob = document.getElementById('dob').value
+            let email = document.getElementById('email').value
+            let admissionNum = document.getElementById('admissionNum').value
+            let phone = document.getElementById('phone').value
+            console.log(fname, lname)
+            let formData = new FormData();
+            var profileImg = imgurl
 
+            formData.append('profile', profileImg);
+            formData.append('fname', fname)
+            formData.append('lname', lname)
+            formData.append('gender', gender)
+            formData.append('dob', dob)
+            formData.append('email', email)
+            formData.append('admissionNum', admissionNum)
+            formData.append('phone', phone)
+            console.log(formData)
+
+            var xhr = new XMLHttpRequest();
+            let progress = document.getElementById('progress')
+            document.getElementById('progressContainer').style.display = 'block'
+
+            //  url upload
+            xhr.open('post', '/tutor/admission', true);
+
+
+            xhr.upload.onprogress = function (e) {
+                if (e.lengthComputable) {
+                    var percentage = (e.loaded / e.total) * 100;
+                    console.log(percentage + "%");
+                    progress.style.width = percentage + '%'
+                    if (percentage == 100) {
+
+                        Swal.fire(
+                            'Uploaded!',
+                            'Announcement uploaded succesfully',
+                            'success'
+                        ).then(() => {
+
+                            location.href = '/tutor/all-students'
+                        })
+
+                    }
+                }
+            };
+
+            xhr.onerror = function (e) {
+                console.log('Error');
+                console.log(e);
+            };
+            xhr.onload = function () {
+                console.log(this.statusText);
+            };
+
+            xhr.send(formData);
+
+
+        }
 
 
 

@@ -20,7 +20,7 @@
                             <i class="flaticon-calendar text-magenta"></i>
                         </div>
                         <div class="item-content">
-                            <div class="item-number"><span >26</span></div>
+                            <div class="item-number"><span class="counter" data-num="{{attendanceData.totalClass}}">{{attendanceData.totalClass}}</span></div>
                             <div class="item-title">Total Class</div>
                         </div>
                     </div>
@@ -31,7 +31,7 @@
                             <i class="flaticon-shopping-list text-blue"></i>
                         </div>
                         <div class="item-content">
-                            <div class="item-number"><span class="text-success counter" data-num="15">15</span></div>
+                            <div class="item-number"><span class="text-success counter" data-num="{{attendanceData.present}}">{{attendanceData.present}}</span></div>
                             <div class="item-title">Present</div>
                         </div>
                     </div>
@@ -42,7 +42,7 @@
                             <i class="flaticon-download text-orange"></i>
                         </div>
                         <div class="item-content">
-                            <div class="item-number"><span class="counter text-danger" data-num="16">16</span></div>
+                            <div class="item-number"><span class="counter text-danger" data-num="{{attendanceData.absent}}">{{attendanceData.absent}}</span></div>
                             <div class="item-title">Absent</div>
                         </div>
                     </div>
@@ -54,7 +54,7 @@
                         </div>
                         <div class="item-content">
                             <div class="item-number"><span></span><span class="counter"
-                                    data-num="52">52</span>%</div>
+                                    data-num="{{attendanceData.avg}}">{{attendanceData.avg}}</span>%</div>
                             <div class="item-title">Present percentage</div>
                         </div>
                     </div>
@@ -62,37 +62,11 @@
             </div>
         </div>
         <!-- Dashboard summery End Here -->
-        <!-- Students Chart End Here -->
-        <div class="col-lg-6 col-4-xxxl col-xl-6">
-                        <div class="card dashboard-card-three">
-                            <div class="card-body">
-                                <div class="heading-layout1">
-                                    <div class="item-title">
-                                        <h3>Students</h3>
-                                    </div>
-                                   
-                                </div>
-                                <div class="doughnut-chart-wrap">
-                                    <canvas id="student-doughnut-chart" width="100" height="270"></canvas>
-                                </div>
-                                <div class="student-report">
-                                    <div class="student-count pseudo-bg-green">
-                                        <h4 class="item-title">Present</h4>
-                                        <div class="item-number">15</div>
-                                    </div>
-                                    <div class="student-count pseudo-bg-red" >
-                                        <h4 class="item-title">Absent</h4>
-                                        <div class="item-number">16</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-        <!-- Students Chart End Here -->
+       
         
                 
         
     </div>
-    
+ 
     
 

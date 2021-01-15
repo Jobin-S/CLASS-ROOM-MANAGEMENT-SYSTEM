@@ -98,6 +98,7 @@ module.exports = {
         
     },
     studentRegister:(details)=>{
+        console.log(details);
         return new Promise((resolve, reject) => {
             details.assignments = []
             details.notes = []

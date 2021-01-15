@@ -20,7 +20,7 @@
                             <i class="flaticon-calendar text-magenta"></i>
                         </div>
                         <div class="item-content">
-                            <div class="item-number"><span >{{student.currentDate}}</span></div>
+                            <div class="item-number"><span>{{student.currentDate}}</span></div>
                             <div class="item-title">Date</div>
                         </div>
                     </div>
@@ -32,9 +32,9 @@
                         </div>
                         <div class="item-content">
                             {{#if student.attendance}}
-                                <div class="item-number"><span class="text-success">marked</span></div>
+                            <div class="item-number"><span class="text-success">marked</span></div>
                             {{else}}
-                                <div class="item-number"><span class="text-danger">Not marked</span></div>
+                            <div class="item-number"><span class="text-danger">Not marked</span></div>
                             {{/if}}
                             <div class="item-title">Attendence</div>
                         </div>
@@ -46,7 +46,8 @@
                             <i class="flaticon-download text-orange"></i>
                         </div>
                         <div class="item-content">
-                            <div class="item-number"><span class="counter text-danger" data-num="4">4</span></div>
+                            <div class="item-number"><span class="counter text-danger"
+                                    data-num="{{pendingAssigment}}">{{pendingAssigment}}</span></div>
                             <div class="item-title">Assignment Pending</div>
                         </div>
                     </div>
@@ -58,7 +59,7 @@
                         </div>
                         <div class="item-content">
                             <div class="item-number"><span></span><span class="counter"
-                                    data-num="5">5</span></div>
+                                    data-num="{{pendingNotes}}">{{pendingNotes}}</span></div>
                             <div class="item-title">Pending Notes</div>
                         </div>
                     </div>
@@ -68,141 +69,161 @@
         <!-- Dashboard summery End Here -->
         <!-- Students Chart End Here -->
         {{!-- <div class="col-lg-6 col-4-xxxl col-xl-6">
-                        <div class="card dashboard-card-three">
-                            <div class="card-body">
-                                <div class="heading-layout1">
-                                    <div class="item-title">
-                                        <h3>Students</h3>
-                                    </div>
-                                   <div class="dropdown">
-                                        <a class="dropdown-toggle" href="#" role="button" 
-                                        data-toggle="dropdown" aria-expanded="false">...</a>
-                
-                                        <div class="dropdown-menu dropdown-menu-right">
-                                            <a class="dropdown-item" href="#"><i class="fas fa-times text-orange-red"></i>Close</a>
-                                            <a class="dropdown-item" href="#"><i class="fas fa-cogs text-dark-pastel-green"></i>Edit</a>
-                                            <a class="dropdown-item" href="#"><i class="fas fa-redo-alt text-orange-peel"></i>Refresh</a>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="doughnut-chart-wrap">
-                                    <canvas id="student-doughnut-chart" width="100" height="270"></canvas>
-                                </div>
-                                <div class="student-report">
-                                    <div class="student-count pseudo-bg-blue">
-                                        <h4 class="item-title">Female Students</h4>
-                                        <div class="item-number">10,500</div>
-                                    </div>
-                                    <div class="student-count pseudo-bg-yellow">
-                                        <h4 class="item-title">Male Students</h4>
-                                        <div class="item-number">24,500</div>
-                                    </div>
-                                </div>
+            <div class="card dashboard-card-three">
+                <div class="card-body">
+                    <div class="heading-layout1">
+                        <div class="item-title">
+                            <h3>Students</h3>
+                        </div>
+                        <div class="dropdown">
+                            <a class="dropdown-toggle" href="#" role="button" data-toggle="dropdown"
+                                aria-expanded="false">...</a>
+
+                            <div class="dropdown-menu dropdown-menu-right">
+                                <a class="dropdown-item" href="#"><i class="fas fa-times text-orange-red"></i>Close</a>
+                                <a class="dropdown-item" href="#"><i
+                                        class="fas fa-cogs text-dark-pastel-green"></i>Edit</a>
+                                <a class="dropdown-item" href="#"><i
+                                        class="fas fa-redo-alt text-orange-peel"></i>Refresh</a>
                             </div>
                         </div>
-                    </div> --}}
-        <!-- Students Chart End Here -->
-        <!-- Class Table Area Start Here -->
-                <div class="card height-auto col-md-12">
-                    <div class="card-body">
-                        <div class="heading-layout1">
-                            <div class="item-title">
-                                <h3>Today's Notes and assignments</h3>
-                            </div>
-                           
+                    </div>
+                    <div class="doughnut-chart-wrap">
+                        <canvas id="student-doughnut-chart" width="100" height="270"></canvas>
+                    </div>
+                    <div class="student-report">
+                        <div class="student-count pseudo-bg-blue">
+                            <h4 class="item-title">Female Students</h4>
+                            <div class="item-number">10,500</div>
                         </div>
-                        
-                        <div class="table-responsive">
-                            <table class="table display data-table text-nowrap">
-                                <thead>
-                                    <tr>
-                                       <th>No.</th>
-                                        <th>Topic</th>
-                                        
-                                        <th>File</th>
-                                        <th>Time</th>
-                                        <th>last Date</th>
-                                        <th>Status</th>
-                                        <th></th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>1</td>
-                                        <td>Mark Willy</td>
-                                        
-                                        <td>classification of computer.pdf</td>
-                                        <td>02/05/2001</td>
-                                        <td>10.00 am </td>
-                                        <td><button type="button" class="btn-fill-lmd radius-30 text-light shadow-dark-pastel-green bg-dark-pastel-green">submitted</button></td>
-                                        
-                                         <td>
-                                            <div class="dropdown">
-                                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                                                    <span class="flaticon-more-button-of-three-dots"></span>
-                                                </a>
-                                                <div class="dropdown-menu dropdown-menu-right">
-                                                    <a class="dropdown-item" href="#"><i class="fas fa-times text-orange-red"></i>Close</a>
-                                                    <a class="dropdown-item" href="#"><i class="fas fa-cogs text-dark-pastel-green"></i>Edit</a>
-                                                    <a class="dropdown-item" href="#"><i class="fas fa-redo-alt text-orange-peel"></i>Refresh</a>
-                                                </div>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>2</td>
-                                        
-                                        <td>Jessia Rose</td>
-                                        
-                                        <td>classification of computer.pdf</td>
-                                        <td>02/05/2001</td>
-                                        <td> 12.30 am</td>
-                                        <td><button type="button" class="btn-fill-lmd radius-30 text-light shadow-red bg-red">pending</button></td>
-                                        
-                                         <td>
-                                            <div class="dropdown">
-                                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                                                    <span class="flaticon-more-button-of-three-dots"></span>
-                                                </a>
-                                                <div class="dropdown-menu dropdown-menu-right">
-                                                    <a class="dropdown-item" href="#"><i class="fas fa-times text-orange-red"></i>Close</a>
-                                                    <a class="dropdown-item" href="#"><i class="fas fa-cogs text-dark-pastel-green"></i>Edit</a>
-                                                    <a class="dropdown-item" href="#"><i class="fas fa-redo-alt text-orange-peel"></i>Refresh</a>
-                                                </div>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>3</td>
-                                        
-                                        <td>Mark Willy</td>
-                                        
-                                        <td>classification of computer.pdf</td>
-                                        <td>02/05/2001</td>
-                                        <td> 12.30 am</td>
-                                        <td><button type="button" class="btn-fill-lmd radius-30 text-light shadow-red bg-red">pending</button></td>
-                                        
-                                         <td>
-                                            <div class="dropdown">
-                                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                                                    <span class="flaticon-more-button-of-three-dots"></span>
-                                                </a>
-                                                <div class="dropdown-menu dropdown-menu-right">
-                                                    <a class="dropdown-item" href="#"><i class="fas fa-times text-orange-red"></i>Close</a>
-                                                    <a class="dropdown-item" href="#"><i class="fas fa-cogs text-dark-pastel-green"></i>Edit</a>
-                                                    <a class="dropdown-item" href="#"><i class="fas fa-redo-alt text-orange-peel"></i>Refresh</a>
-                                                </div>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    
-                                    
-                                </tbody>
-                            </table>
+                        <div class="student-count pseudo-bg-yellow">
+                            <h4 class="item-title">Male Students</h4>
+                            <div class="item-number">24,500</div>
                         </div>
                     </div>
                 </div>
-                <!-- Class Table Area End Here -->
+            </div>
+        </div> --}}
+        <!-- Students Chart End Here -->
+        <!-- Class Table Area Start Here -->
+        <div class="card height-auto col-md-12">
+            <div class="card-body">
+                <div class="heading-layout1">
+                    <div class="item-title">
+                        <h3>Today's Notes and assignments</h3>
+                    </div>
+
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table display data-table text-nowrap">
+                        <thead>
+                            <tr>
+                                <th>No.</th>
+                                <th>Topic</th>
+
+                                <th>File</th>
+                                <th>Time</th>
+                                <th>last Date</th>
+                                <th>Status</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td>Mark Willy</td>
+
+                                <td>classification of computer.pdf</td>
+                                <td>02/05/2001</td>
+                                <td>10.00 am </td>
+                                <td><button type="button"
+                                        class="btn-fill-lmd radius-30 text-light shadow-dark-pastel-green bg-dark-pastel-green">submitted</button>
+                                </td>
+
+                                <td>
+                                    <div class="dropdown">
+                                        <a href="#" class="dropdown-toggle" data-toggle="dropdown"
+                                            aria-expanded="false">
+                                            <span class="flaticon-more-button-of-three-dots"></span>
+                                        </a>
+                                        <div class="dropdown-menu dropdown-menu-right">
+                                            <a class="dropdown-item" href="#"><i
+                                                    class="fas fa-times text-orange-red"></i>Close</a>
+                                            <a class="dropdown-item" href="#"><i
+                                                    class="fas fa-cogs text-dark-pastel-green"></i>Edit</a>
+                                            <a class="dropdown-item" href="#"><i
+                                                    class="fas fa-redo-alt text-orange-peel"></i>Refresh</a>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+
+                                <td>Jessia Rose</td>
+
+                                <td>classification of computer.pdf</td>
+                                <td>02/05/2001</td>
+                                <td> 12.30 am</td>
+                                <td><button type="button"
+                                        class="btn-fill-lmd radius-30 text-light shadow-red bg-red">pending</button>
+                                </td>
+
+                                <td>
+                                    <div class="dropdown">
+                                        <a href="#" class="dropdown-toggle" data-toggle="dropdown"
+                                            aria-expanded="false">
+                                            <span class="flaticon-more-button-of-three-dots"></span>
+                                        </a>
+                                        <div class="dropdown-menu dropdown-menu-right">
+                                            <a class="dropdown-item" href="#"><i
+                                                    class="fas fa-times text-orange-red"></i>Close</a>
+                                            <a class="dropdown-item" href="#"><i
+                                                    class="fas fa-cogs text-dark-pastel-green"></i>Edit</a>
+                                            <a class="dropdown-item" href="#"><i
+                                                    class="fas fa-redo-alt text-orange-peel"></i>Refresh</a>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>3</td>
+
+                                <td>Mark Willy</td>
+
+                                <td>classification of computer.pdf</td>
+                                <td>02/05/2001</td>
+                                <td> 12.30 am</td>
+                                <td><button type="button"
+                                        class="btn-fill-lmd radius-30 text-light shadow-red bg-red">pending</button>
+                                </td>
+
+                                <td>
+                                    <div class="dropdown">
+                                        <a href="#" class="dropdown-toggle" data-toggle="dropdown"
+                                            aria-expanded="false">
+                                            <span class="flaticon-more-button-of-three-dots"></span>
+                                        </a>
+                                        <div class="dropdown-menu dropdown-menu-right">
+                                            <a class="dropdown-item" href="#"><i
+                                                    class="fas fa-times text-orange-red"></i>Close</a>
+                                            <a class="dropdown-item" href="#"><i
+                                                    class="fas fa-cogs text-dark-pastel-green"></i>Edit</a>
+                                            <a class="dropdown-item" href="#"><i
+                                                    class="fas fa-redo-alt text-orange-peel"></i>Refresh</a>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <!-- Class Table Area End Here -->
         <!-- Notice Board Start Here -->
         <div class="col-lg-6 col-4-xxxl col-xl-6">
             <div class="card dashboard-card-six">
@@ -226,15 +247,15 @@
                     </div>
                     <div class="notice-box-wrap">
                         {{#each events}}
-                    <div class="notice-list">
-                        <div class="post-date bg-skyblue">{{date}}</div>
-                        <h3 class="notice-title"><a href="/event/{{_id}}">{{title}}</a></h3>
-                        <h6 class="notice-title"><a href="/event/{{_id}}">{{description}}</a></h6>
-                        {{#if isPaid}}
+                        <div class="notice-list">
+                            <div class="post-date bg-skyblue">{{date}}</div>
+                            <h3 class="notice-title"><a href="/event/{{_id}}">{{title}}</a></h3>
+                            <h6 class="notice-title"><a href="/event/{{_id}}">{{description}}</a></h6>
+                            {{#if isPaid}}
                             <div class="entry-meta">Paid Event /<span> Rs {{price}}</span></div>
-                        {{/if}}
-                    </div>
-                    {{/each}}
+                            {{/if}}
+                        </div>
+                        {{/each}}
                     </div>
                 </div>
             </div>

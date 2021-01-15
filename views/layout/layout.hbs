@@ -87,8 +87,21 @@
     {{#if student}}
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.12.0/dist/sweetalert2.all.min.js"></script>
     <script>
+        var addNotification = function(title){
+            var notcount = document.getElementById('notificationCount')
+            document.getElementById('notificationCount').innerText = notcount.innerText + 1
+            notcount.style.display = 'block'
+            let audio = new Audio('/audio/notification.mp3')
+            audio.play()
+            let newNotification = document.getElementById('newNotification')
+            newNotification.style.display = 'flex'
+            document.getElementById('newNotificationTitle').innerText = title
+
+
+        }
         var socket = io('http://localhost:3000/')
         socket.on('message', (message) => {
+            addNotification(message.title)
             let timerInterval
             Swal.fire({
                 title: 'Notification',

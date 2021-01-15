@@ -66,6 +66,11 @@
                         </tr>
                     </thead>
                     <tbody>
+                        <tr>
+                            <td>
+                                <img src="" id="profilePic" alt="">
+                            </td>
+                        </tr>
                         {{#each students}}
                         <tr>
                             <td>
@@ -74,7 +79,7 @@
                                     <label class="form-check-label">#{{admissionNum}}</label>
                                 </div>
                             </td>
-                            <td class="text-center"><img src="/img/figure/student2.png" alt="student"></td>
+                            <td class="text-center"><img src={{profile}} alt="student"></td>
                             <td><a href="/tutor/all-students/{{_id}}">{{fname}}</a></td>
                             <td>{{gender}}</td>
                             <td>11</td>
@@ -136,7 +141,7 @@
                                 })
                                 location.reload()
                             }
-                            
+
                         }
                     })
 
@@ -189,6 +194,7 @@
     {{/if}}
 
 
+
     <!-- Optional: include a polyfill for ES6 Promises for IE11 -->
-    {{!-- 
+    {{!--
     <script src="https://cdn.jsdelivr.net/npm/promise-polyfill"></script> --}}
