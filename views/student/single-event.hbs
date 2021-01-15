@@ -80,14 +80,14 @@
 
         <script>
             // Razorpay starts here
-
+            let price = {{ event.price }}
             let razorpayTicketPurchase = function (id) {
                 $.ajax({
                     url: '/order/razorpay',
                     method: 'post',
                     data: {
                         id: id,
-                        price: {{ event.price }}
+                        price: price
                     },
             success: (response) => {
                 if (response) {
@@ -204,7 +204,7 @@
             let paypalTicketPurchase = function () {
                 let event = {
                     title: '{{event.title}}',
-                    price: {{ event.price }
+                    price: price
             },
                 eventId: '{{event._id}}',
                 description: '{{event.description}}'
