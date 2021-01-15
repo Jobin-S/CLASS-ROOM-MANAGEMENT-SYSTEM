@@ -89,13 +89,13 @@
                         id: id,
                         price: price
                     },
-            success: (response) => {
-                if (response) {
-                    razorpayInit(response)
-                }
-            }
+                    success: (response) => {
+                        if (response) {
+                            razorpayInit(response)
+                        }
+                    }
                 })
-                
+
             }
 
             let showConfirmationAlert = function (id) {
@@ -204,11 +204,10 @@
             let paypalTicketPurchase = function () {
                 let event = {
                     title: '{{event.title}}',
-                    price: price
-            },
-                eventId: '{{event._id}}',
-                description: '{{event.description}}'
-                }
+                    price: price,               
+                    eventId: '{{event._id}}',
+                    description: '{{event.description}}'
+            }
             $.ajax({
                 url: '/order/paypal',
                 method: 'post',
