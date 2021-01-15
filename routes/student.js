@@ -10,8 +10,8 @@ var io = require("socket.io")(http);
 
 io.on("connection", (socket) => {
   console.log("auth value: " + socket.id);
-  socket.on("sendNotification", (details) => {
-    socket.broadCast.emit("sendNotification", details);
+  socket.on("message", (details) => {
+    socket.broadCast.emit("message", details);
   });
 });
 
@@ -38,7 +38,7 @@ const verifyLogin = (req, res, next) => {
 };
 
 router.get("/", (req, res) => {
-  res.render("student/role-selection");
+  res.render("student/role-selection", {title:'E CLASSROOM'});
 });
 
 router.get("/dashboard", verifyLogin, async (req, res) => {

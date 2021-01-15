@@ -16,12 +16,12 @@
                 <div class="form-group">
                     <label>Phone number</label>
                     <input type="text" name="phone" value="9400823628" placeholder="Enter Phone Number"
-                        class="form-control">
+                        class="form-control" required>
                     <i class="far fa-envelope"></i>
                 </div>
                 <div class="form-group">
                     <label>Password</label>
-                    <input type="password" name="password" value="password" placeholder="Enter password"
+                    <input type="password" required name="password" value="password" placeholder="Enter password"
                         class="form-control">
                     <i class="fas fa-lock"></i>
                 </div>
@@ -30,7 +30,9 @@
                         <input type="checkbox" class="form-check-input" id="remember-me">
                         <label for="remember-me" class="form-check-label">Remember Me</label>
                     </div> --}}
+                    <a href="/activate" class="forgot-btn mb-2">Create password</a>
                     <a href="/otp-login" class="forgot-btn">Login using OTP</a>
+
                 </div>
                 <div class="form-group">
                     <button type="submit" class="login-btn">Login</button>

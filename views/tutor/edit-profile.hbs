@@ -49,7 +49,7 @@
                                         <tbody>
                                             <tr>
                                                 <td>Name:</td>
-                                                <td><input type="text" name="name"
+                                                <td><input required type="text" name="name"
                                                         class="bold-text form-control text-dark"
                                                         value="{{profileDetails.name}}"></input></td>
                                             </tr>
@@ -57,7 +57,7 @@
                                             <tr>
                                                 <td>Gender:</td>
                                                 <td class="bold-text">
-                                                    <select name="gender" class="select2" name="gender">
+                                                    <select required name="gender" class="select2" name="gender">
                                                         <option value="Male">{{profileDetails.gender}}</option>
                                                         <option value="Male">Male</option>
                                                         <option value="Female">Female</option>
@@ -71,7 +71,7 @@
                                                 <td>Date Of Birth:</td>
                                                 <div class="form-group">
                                                     <td>
-                                                        <input type="text" name="dob" value="{{profileDetails.dob}}"
+                                                        <input required type="text" name="dob" value="{{profileDetails.dob}}"
                                                             placeholder="{{profileDetails.dob}}"
                                                             class="bold-text form-control air-datepicker"
                                                             data-position='bottom right'>
@@ -84,7 +84,7 @@
                                             <tr>
                                                 <td>E-mail:</td>
                                                 <td class="font-medium text-dark-medium">
-                                                    <input name="email" class=" bold-text form-control"
+                                                    <input required name="email" class=" bold-text form-control"
                                                         value="{{profileDetails.email}}">
                                                 </td>
                                             </tr>
@@ -100,7 +100,7 @@
                                             <tr>
                                                 <td>Phone:</td>
                                                 <td class="font-medium text-dark-medium">
-                                                    <input name="phone" class="bold-text form-control" type="text"
+                                                    <input required name="phone" class="bold-text form-control" type="text"
                                                         value="{{profileDetails.phone}}">
                                                 </td>
                                             </tr>
