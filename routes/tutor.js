@@ -106,9 +106,9 @@ router.get("/Dashboard", verifyLogin, async function (req, res, next) {
   let image = await tutorHelpers.getProfilePic(req.session.tutor.email);
   let announcements = await tutorHelpers.getAnnouncements();
   let events = await tutorHelpers.getEvents();
-  // let totalStudents = await tutorHelpers.getTotalStudents();
-  // let lastAssignmentRecivedCount = await tutorHelpers.getLastAssignmentReceivedCount();
-  // let totalAttendence = await tutorHelpers.getTotalAttendanceCount();
+  let totalStudents = await tutorHelpers.getTotalStudents();
+  let lastAssignmentRecivedCount = await tutorHelpers.getLastAssignmentReceivedCount();
+  let totalAttendence = await tutorHelpers.getTotalAttendanceCount();
   let currentDate = await tutorHelpers.getCurrentDate();
 
   res.render("tutor/dashboard", {
@@ -119,9 +119,9 @@ router.get("/Dashboard", verifyLogin, async function (req, res, next) {
     events,
     tutorName: tutorName,
     dashboard: sidebarToggle,
-    // totalStudents,
-    // assignmentCount: lastAssignmentRecivedCount,
-    // totalAttendence,
+    totalStudents,
+    assignmentCount: lastAssignmentRecivedCount,
+    totalAttendence,
     date: currentDate,
   });
 });
