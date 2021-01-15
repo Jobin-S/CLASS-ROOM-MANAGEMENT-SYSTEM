@@ -22,7 +22,7 @@ module.exports = {
         if (details.password == "password") {
           console.log("login succesfull");
           response.user = user;
-          response.status = true
+          response.status = true;
           resolve(response);
         } else {
           console.log("failed");
@@ -604,6 +604,8 @@ module.exports = {
         .get()
         .collection(collection.STUDENT_COLLECTION)
         .countDocuments();
+      if (!totalStudents) resolve(0);
+
       resolve(totalStudents);
     });
   },
@@ -616,12 +618,14 @@ module.exports = {
         .sort({ _id: -1 })
         .limit(1)
         .toArray();
-      lastAssignmentId = lastAssignment[0]._id;
+      
+      //   lastAssignmentId = lastAssignment[0]._id;
       let count = await db
         .get()
         .collection(collection.STUDENT_COLLECTION)
         .aggregate([{ $project: { count: { $size: "$assignments" } } }])
         .toArray();
+      
       console.log(count[0].count);
       resolve(count[0].count);
     });
@@ -635,6 +639,8 @@ module.exports = {
         .sort({ _id: -1 })
         .limit(1)
         .toArray();
+      if (!lastNote) resolve(0);
+
       let lastNoteId = lastNote[0]._id;
       let count = await db
         .get()

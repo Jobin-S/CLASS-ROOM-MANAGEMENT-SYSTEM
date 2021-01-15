@@ -438,6 +438,8 @@ module.exports = {
         .get()
         .collection(collection.ASSIGNMENT_COLLECTION)
         .countDocuments();
+      if (!assignmentsCount) resolve(0);
+
       let completedAssignment = await db
         .get()
         .collection(collection.STUDENT_COLLECTION)
@@ -456,6 +458,8 @@ module.exports = {
         .get()
         .collection(collection.NOTE_COLLECTION)
         .countDocuments();
+      if (!notesCount) resolve(0);
+
       let completedNotes = await db
         .get()
         .collection(collection.STUDENT_COLLECTION)
