@@ -23,49 +23,49 @@
                     <div id="confirm" style="display: none;" class="col-9 alert alert-success ">OTP has sended to you
                         number</div>
                 </div>
-                
-    </div>
-</div>
-<script>
-    let generateOtp = function () {
-        let num = document.getElementById('phoneNum').value
-        let confirm = document.getElementById('confirm')
-        console.log('called generate otp function'+num)
-        $.ajax({
-            url: '/send-otp',
-            method: 'post',
-            data: { phone: num },
-            success: (response) => {
-                if (response.status) {
-                    console.log('otp generted ' + num)
-                    confirm.style.display = 'block'
-                    var otp = prompt("Please enter OTP");
-                    if (otp == null || otp == "") {
-                        alert('you have cancelled activation')
-                        location.reload()
-                    } else {
-                        verifyOtp(otp)
-                    }
-                }else{
-                    alert('Your number is not registered by your tutor')
-                }
-            }
-        })
-    }
 
-    let verifyOtp = function (otp){
-        
-        $.ajax({
-            url:'/verify-otp',
-            method:'post',
-            data:{otp:otp},
-            success:(response)=>{
-                if(response.status == 'success'){
-                    location.href='/register'
-                }else{
-                    alert(response.status,' : ', response.error)
+        </div>
+    </div>
+    <script>
+        let generateOtp = function () {
+            let num = document.getElementById('phoneNum').value
+            let confirm = document.getElementById('confirm')
+            console.log('called generate otp function' + num)
+            $.ajax({
+                url: '/send-otp',
+                method: 'post',
+                data: { phone: num },
+                success: (response) => {
+                    if (response.status) {
+                        console.log('otp generted ' + num)
+                        confirm.style.display = 'block'
+                        var otp = prompt("Please enter OTP");
+                        if (otp == null || otp == "") {
+                            alert('you have cancelled activation')
+                            location.reload()
+                        } else {
+                            verifyOtp(otp)
+                        }
+                    } else {
+                        alert('Your number is not registered by your tutor')
+                    }
                 }
-            }
-        })
-    }
-</script>
+            })
+        }
+
+        let verifyOtp = function (otp) {
+
+            $.ajax({
+                url: '/verify-otp',
+                method: 'post',
+                data: { otp: otp },
+                success: (response) => {
+                    if (response.status == 'success') {
+                        location.href = '/register'
+                    } else {
+                        alert(response.status, ' : ', response.error)
+                    }
+                }
+            })
+        }
+    </script>

@@ -1,14 +1,15 @@
-<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css"><style>
-    body{
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<style>
+    body {
         background-color: white;
     }
 </style>
 <form>
     <input id="myFile" name="myFile" type="file">
 </form>
-<button  onclick="submit()">Submit</button>
+<button onclick="submit()">Submit</button>
 <div class="w3-light-grey">
-  <div class="w3-green" id="progress" style="height:24px;width:0%"></div>
+    <div class="w3-green" id="progress" style="height:24px;width:0%"></div>
 </div>
 <script>
     var submit = function () {
@@ -25,8 +26,8 @@
             if (e.lengthComputable) {
                 var percentage = (e.loaded / e.total) * 100;
                 console.log(percentage + "%");
-                progress.style.width = percentage+'%'
-                if(percentage == 100) alert('uploaded   ')
+                progress.style.width = percentage + '%'
+                if (percentage == 100) alert('uploaded   ')
             }
         };
 

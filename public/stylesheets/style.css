@@ -1,4 +1,4 @@
-.bold-text{
+.bold-text {
   font-weight: bolder !important;
 }
 
@@ -6,8 +6,7 @@
   font-size: 1.6rem !important;
 }
 
-.cropper__div img{
+.cropper__div img {
   display: block;
   max-width: 100%;
 }
-

@@ -121,7 +121,7 @@
                     console.log(percentage + "%");
                     progress.style.width = percentage + '%'
                     if (percentage == 100) {
-                        socket.emit('message', { "message":"New Assignment Added", "title": topic})
+                        socket.emit('message', { "message": "New Assignment Added", "title": topic })
                         Swal.fire(
                             'Uploaded!',
                             'Assignment uploaded succesfully',

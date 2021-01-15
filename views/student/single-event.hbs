@@ -79,7 +79,7 @@
         <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
         <script>
-        // Razorpay starts here
+            // Razorpay starts here
 
             let razorpayTicketPurchase = function (id) {
                 $.ajax({
@@ -98,7 +98,7 @@
                 
             }
 
-            let showConfirmationAlert =function (id) {
+            let showConfirmationAlert = function (id) {
                 Swal.fire({
                     title: 'Are you sure?',
                     text: "Click confirm for purchase Event ticket",
@@ -122,25 +122,25 @@
                     }, 1000)
                 })
 
-                let selectMethod = async function(){
+                let selectMethod = async function () {
                     const { value: paymentMethod } = await Swal.fire({
-                    title: 'Select Payment Method',
-                    input: 'radio',
-                    inputOptions: inputOptions,
-                    inputValidator: (value) => {
-                        if (!value) {
-                            return 'You need to choose Payment method!'
+                        title: 'Select Payment Method',
+                        input: 'radio',
+                        inputOptions: inputOptions,
+                        inputValidator: (value) => {
+                            if (!value) {
+                                return 'You need to choose Payment method!'
+                            }
                         }
-                    }
-                })
+                    })
 
-                if (paymentMethod === 'razorpay') {
-                    razorpayTicketPurchase(id)
-                } else if(paymentMethod === 'paypal'){
-                    paypalTicketPurchase()
+                    if (paymentMethod === 'razorpay') {
+                        razorpayTicketPurchase(id)
+                    } else if (paymentMethod === 'paypal') {
+                        paypalTicketPurchase()
+                    }
                 }
-                }
-                
+
             }
 
             let razorpayInit = function (order) {
@@ -198,23 +198,24 @@
                 })
             }
 
-        // Razorpay ends here
-        // paypal starts here
+            // Razorpay ends here
+            // paypal starts here
 
-            let paypalTicketPurchase = function(){
+            let paypalTicketPurchase = function () {
                 let event = {
-                    title:'{{event.title}}',
-                    price:{{event.price}},
-                    eventId:'{{event._id}}',
-                    description:'{{event.description}}'
+                    title: '{{event.title}}',
+                    price: {{ event.price }
+            },
+                eventId: '{{event._id}}',
+                description: '{{event.description}}'
                 }
-                $.ajax({
-                    url:'/order/paypal',
-                    method:'post',
-                    data:{event:event},
-                    success:(response)=>{
-                        location.href = response.url
-                    }
-                })
+            $.ajax({
+                url: '/order/paypal',
+                method: 'post',
+                data: { event: event },
+                success: (response) => {
+                    location.href = response.url
+                }
+            })
             }
         </script>

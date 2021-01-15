@@ -1,11 +1,13 @@
 <style>
-.home_banner_area {
-  z-index: 1;
-  min-height: 900px;
-  position: relative;
-  background: url(/img/classroom.jpg) no-repeat center;
-  opacity: 90%;
-  background-size: cover; }
+  .home_banner_area {
+    z-index: 1;
+    min-height: 900px;
+    position: relative;
+    background: url(/img/classroom.jpg) no-repeat center;
+    opacity: 90%;
+    background-size: cover;
+  }
+
   .home_banner_area .banner_inner {
     position: absolute;
     top: 40%;
@@ -15,38 +17,44 @@
     -o-transform: translateY(-50%);
     transform: translateY(-50%);
     z-index: 10;
-    width: 100%; }
-    @media (max-width: 991px) {
-      .home_banner_area .banner_inner {
-        top: 50%; } }
-    .home_banner_area .banner_inner .banner_content h2 {
-      font-size: 48px;
-      font-weight: 500; }
-    .home_banner_area .banner_inner .banner_content p {
-      font-size: 20px;
-      color: #002347;
-      font-weight: 500; }
-   
+    width: 100%;
+  }
 
+  @media (max-width: 991px) {
+    .home_banner_area .banner_inner {
+      top: 50%;
+    }
+  }
+
+  .home_banner_area .banner_inner .banner_content h2 {
+    font-size: 48px;
+    font-weight: 500;
+  }
+
+  .home_banner_area .banner_inner .banner_content p {
+    font-size: 20px;
+    color: #002347;
+    font-weight: 500;
+  }
 </style>
 <section class="home_banner_area">
-    <div class="banner_inner">
-      <div class="container">
-        <div class="row">
-          <div class="col-lg-12">
-            <div class="banner_content text-center">
-              <h2 class="text-uppercase text-light mb-5">
-                E - CLASSROOM
-              </h2>
+  <div class="banner_inner">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-12">
+          <div class="banner_content text-center">
+            <h2 class="text-uppercase text-light mb-5">
+              E - CLASSROOM
+            </h2>
 
 
-              <div>
-                <a href="/tutor" class="mx-4 btn-fill-lg btn-gradient-yellow btn-hover-bluedark">TUTOR</a>
-                <a href="/login" class="mx-4 btn-fill-lg btn-gradient-yellow btn-hover-bluedark">STUDENT</a>
-              </div>
+            <div>
+              <a href="/tutor" class="mx-4 btn-fill-lg btn-gradient-yellow btn-hover-bluedark">TUTOR</a>
+              <a href="/login" class="mx-4 btn-fill-lg btn-gradient-yellow btn-hover-bluedark">STUDENT</a>
             </div>
           </div>
         </div>
       </div>
     </div>
-  </section>
+  </div>
+</section>

@@ -473,5 +473,52 @@ module.exports = {
             resolve(orders)
         })
         
+    },
+    getTotalStudents:()=>{
+        return new Promise(async(resolve, reject) => {
+            let totalStudents = await db.get().collection(collection.STUDENT_COLLECTION).countDocuments()
+            resolve(totalStudents)
+        })
+        
+    },
+    getLastAssignmentReceivedCount:()=>{
+        return new Promise(async(resolve, reject) => {
+            let lastAssignment = await db.get().collection(collection.ASSIGNMENT_COLLECTION)
+            .find().sort({_id:-1}).limit(1).toArray()
+            lastAssignmentId = lastAssignment[0]._id
+            let count = await db.get().collection(collection.STUDENT_COLLECTION).aggregate([
+                {$project:{count:{$size:'$assignments'}}}
+            ]).toArray()
+            console.log(count[0].count);
+            resolve(count[0].count)
+        })
+        
+    },
+    getTotalAttendanceCount:()=>{
+        return new Promise(async(resolve, reject) => {
+            let lastNote = await db.get().collection(collection.NOTE_COLLECTION)
+            .find().sort({_id:-1}).limit(1).toArray()
+            let lastNoteId = lastNote[0]._id
+            let count = await db.get().collection(collection.STUDENT_COLLECTION)
+            .find({notes:{ $elemMatch: { noteId: objectId(lastNoteId) } }}).toArray()
+            console.log(lastNoteId);
+            console.log(count);
+            console.log(count.length);
+            resolve(count.length)
+        })
+        
+    },
+    getCurrentDate:()=>{
+        return new Promise((resolve, reject) => {
+            const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
+        "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+            let dt = new Date()
+            let date = dt.getDate()
+            let month = monthNames[dt.getMonth()]
+            let year = dt.getFullYear()
+            console.log(`${date} ${month} ${year}`);
+            resolve(`${date} ${month} ${year}`)
+        })
+        
     }
 }

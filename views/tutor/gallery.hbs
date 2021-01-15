@@ -74,7 +74,8 @@
                                                     <label class="form-check-label">{{@key}}</label>
                                                 </div>
                                             </td>
-                                            <td class="text-center"><img src="/uploads/gallery/{{file}}" height="10%" alt="student">
+                                            <td class="text-center"><img src="/uploads/gallery/{{file}}" height="10%"
+                                                    alt="student">
                                             </td>
                                             <td>{{title}}</td>
                                             <td>
@@ -161,8 +162,8 @@
 
         }
 
-    const deleteGallery = function(id, name){
-        Swal.fire({
+        const deleteGallery = function (id, name) {
+            Swal.fire({
                 title: 'Are you sure?',
                 text: `${name} will be deleted from Gallery.`,
                 icon: 'warning',
@@ -185,12 +186,12 @@
                                 })
                                 location.reload()
                             }
-                            
+
                         }
                     })
 
                 }
             })
-    }
+        }
 
     </script>
