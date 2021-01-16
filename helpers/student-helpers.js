@@ -282,7 +282,7 @@ module.exports = {
       let student = await db
         .get()
         .collection(collection.STUDENT_COLLECTION)
-        .find({ _id: ObjectId(userId), notes: { $elemMatch: { date: "15" } } })
+        .find({ _id: ObjectId(userId), notes: { $elemMatch: { date: "date" } } })
         .toArray();
 
       if (student[0]) {
