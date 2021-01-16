@@ -191,14 +191,13 @@ module.exports = {
             .get()
             .collection(collection.STUDENT_COLLECTION)
             .findOne({ phone: phone });
-          console.log(student);
-
-          console.log(notes);
+          
 
           for (var i in student.notes) {
             let studentNoteId = student.notes[i].noteId;
             for (var j in notes) {
-              if (notes[j]._id == objectId(studentNoteId)) {
+              if (notes[j]._id === studentNoteId) {
+                console.log('marked '+studentNoteId);
                 notes[j].marked = true;
               }
             }
