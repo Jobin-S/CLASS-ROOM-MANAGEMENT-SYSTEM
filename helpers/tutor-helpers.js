@@ -141,7 +141,7 @@ module.exports = {
       db.get()
         .collection(collection.CLASS_INFO_COLLECTION)
         .updateOne(
-          { _id: objectId("5fc9b867640f9416cb653859") },
+          { _id: objectId("5fd323bd12d91204ec466cd7") },
           {
             $inc: { lastAdmissionNum: 1 },
           }

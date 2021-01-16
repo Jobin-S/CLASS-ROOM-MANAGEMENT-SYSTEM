@@ -89,7 +89,7 @@
     <script>
         var addNotification = function (title) {
             var notcount = document.getElementById('notificationCount')
-            document.getElementById('notificationCount').innerText = notcount.innerText + 1
+            document.getElementById('notificationCount').innerText = parseInt(notcount.innerText) + 1
             notcount.style.display = 'block'
             let audio = new Audio('/audio/notification.mp3')
             audio.play()
