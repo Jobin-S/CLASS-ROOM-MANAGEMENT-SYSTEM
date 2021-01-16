@@ -173,7 +173,7 @@ router.get("/attendance", verifyLogin, async (req, res) => {
     console.log("normal route");
     let dt = new Date();
     console.log(dt);
-    currentDate = dt.getDate() + "/" + dt.getMonth() + "/" + dt.getFullYear();
+    currentDate = dt.getDate() + "/" + dt.getMonth()+1 + "/" + dt.getFullYear();
     attendanceData = await tutorHelpers.getAllAttendance(currentDate);
     attendanceData.current = currentDate;
     console.log("data");
