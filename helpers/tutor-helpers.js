@@ -618,14 +618,14 @@ module.exports = {
         .sort({ _id: -1 })
         .limit(1)
         .toArray();
-      
+
       //   lastAssignmentId = lastAssignment[0]._id;
       let count = await db
         .get()
         .collection(collection.STUDENT_COLLECTION)
         .aggregate([{ $project: { count: { $size: "$assignments" } } }])
         .toArray();
-      
+
       console.log(count[0].count);
       resolve(count[0].count);
     });
