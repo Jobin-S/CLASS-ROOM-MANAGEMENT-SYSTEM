@@ -198,7 +198,7 @@ module.exports = {
           for (var i in student.notes) {
             let studentNoteId = student.notes[i].noteId;
             for (var j in notes) {
-              if (notes[j]._id == studentNoteId) {
+              if (notes[j]._id == objectId(studentNoteId)) {
                 notes[j].marked = true;
               }
             }
