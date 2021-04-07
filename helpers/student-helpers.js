@@ -120,7 +120,8 @@ module.exports = {
           for (var i in student.assignments) {
             let assignmentId = student.assignments[i].assignmentId;
             for (var j in assignments) {
-              if (assignmentId == assignments[j]._id) {
+              console.log(assignmentId+" "+assignments[j]._id);
+              if (assignmentId == objectId(assignments[j]._id)) {
                 assignments[j].submitted = true;
                 assignments[j].mark = student.assignments[i].mark;
               }
@@ -194,9 +195,11 @@ module.exports = {
           
 
           for (var i in student.notes) {
-            let studentNoteId = student.notes[i].noteId;
+            let studentNoteId = objectId(student.notes[i].noteId);
             for (var j in notes) {
-              if (notes[j]._id === studentNoteId) {
+            console.log(studentNoteId+" "+notes[j]._id);
+
+              if (studentNoteId == notes[j]._id) {
                 console.log('marked '+studentNoteId);
                 notes[j].marked = true;
               }
